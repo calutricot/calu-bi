@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>BI Calu Tricot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+:root {
+  --font-anthropic-sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-anthropic-serif: "Source Serif 4", Georgia, serif;
+  --color-bg: #faf9f5; --color-panel: #ffffff; --color-fg: #1f1e1b; --color-fg-muted: #6b6860;
+  --color-border-line: #e4e1d8; --color-ok: #2f7d4f; --color-bad: #b42318; --color-warn: #a86200;
+  --cds-border: #e4e1d8; --cds-surface-popover: #ffffff; --cds-text-secondary: #6b6860;
+  --cds-shadow-popover: 0 6px 24px rgba(0,0,0,.12);
+  --cds-chart-axis: #8a877e; --cds-chart-grid: #ece9e1; --cds-chart-muted: #c9c5b9;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 24px;
+  --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 16px;
+  --cds-radius: 8px; --cds-dur-slow: .3s;
+  --cds-font-size-caption: 13px; --cds-font-size-body: 15px; --cds-font-size-heading: 17px; --cds-font-size-title: 28px;
+  --cds-font-weight-medium: 500;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --color-bg: #1c1b19; --color-panel: #262522; --color-fg: #eeece6; --color-fg-muted: #a5a197;
+  --color-border-line: #3a3834; --color-ok: #6cc28f; --color-bad: #f07a6e; --color-warn: #e0a24a;
+  --cds-border: #3a3834; --cds-surface-popover: #2e2d29; --cds-text-secondary: #a5a197;
+  --cds-shadow-popover: 0 6px 24px rgba(0,0,0,.5);
+  --cds-chart-axis: #8d897f; --cds-chart-grid: #34322e; --cds-chart-muted: #59564f;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --color-bg: #1c1b19; --color-panel: #262522; --color-fg: #eeece6; --color-fg-muted: #a5a197;
+  --color-border-line: #3a3834; --color-ok: #6cc28f; --color-bad: #f07a6e; --color-warn: #e0a24a;
+  --cds-border: #3a3834; --cds-surface-popover: #2e2d29; --cds-text-secondary: #a5a197;
+  --cds-chart-axis: #8d897f; --cds-chart-grid: #34322e; --cds-chart-muted: #59564f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); -webkit-text-size-adjust: 100%; }
+#app { max-width: 1240px; margin: 0 auto; padding: 24px 16px 48px; }
+.dash-skeleton { color: transparent !important; background: var(--color-border-line); border-radius: 4px; animation: pulso 1.2s ease-in-out infinite; }
+@keyframes pulso { 50% { opacity: .5; } }
+.bi.atualizando .bi-pane { opacity: .55; transition: opacity .3s; }
+#entrar { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+#entrar form { width: min(100%, 360px); display: grid; gap: 12px; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 12px; padding: 28px 24px; }
+#entrar h1 { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 26px; }
+#entrar p { margin: 0; color: var(--color-fg-muted); font-size: 14px; }
+#entrar input { font: inherit; font-size: 16px; padding: 10px 12px; border: 1px solid var(--color-border-line); border-radius: 8px; background: var(--color-bg); color: var(--color-fg); }
+#entrar button { font: inherit; font-size: 15px; padding: 10px 12px; border: 0; border-radius: 8px; background: var(--color-fg); color: var(--color-bg); cursor: pointer; font-weight: 500; }
+#entrar button:disabled { opacity: .6; cursor: wait; }
+#entrar .erro { color: var(--color-bad); min-height: 1.2em; }
+.rodape { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; font-size: 12px; color: var(--color-fg-muted); }
+.rodape button { font: inherit; background: none; border: 0; color: var(--color-fg-muted); text-decoration: underline; cursor: pointer; padding: 0; }
+</style>
+</head>
+<body>
+<div id="entrar" hidden>
+  <form>
+    <h1>BI Calu Tricot</h1>
+    <p>Painel de vendas e estoque, somente leitura.</p>
+    <input id="senha" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha" required>
+    <button type="submit">Entrar</button>
+    <div class="erro" role="alert"></div>
+  </form>
+</div>
+<main id="app" hidden>
+<style>
+.bi { display: grid; gap: var(--cds-gap-lg); font-family: var(--font-anthropic-sans); }
+.bi-head { display: grid; gap: var(--cds-gap-xs); }
+.bi-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+.bi-take { color: var(--color-fg-muted); margin: 0; max-width: 72ch; line-height: 1.55; font-size: var(--cds-font-size-body); }
+.bi .bi-take b { font-weight: 600; color: var(--color-fg); }
+.bi-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; }
+.bi-seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
+.bi-seg button { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); background: var(--color-bg); color: var(--color-fg-muted); border: 0; border-right: 1px solid var(--color-border-line); cursor: pointer; }
+.bi-seg button:last-child { border-right: 0; }
+.bi-seg button[aria-pressed="true"] { background: var(--color-panel); color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+.bi-seg button:focus-visible, .bi-btn:focus-visible, .bi-field:focus-visible, .bi-tbl tr[data-key]:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+.bi-field { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); }
+.bi-lbl { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bi-btn { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); cursor: pointer; }
+.bi-fresh { margin-left: auto; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bi-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: var(--cds-gap-md); }
+.bi-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: grid; gap: var(--cds-gap-xs); align-content: start; }
+.bi-kpi-lbl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bi-kpi-val { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.15; min-height: 1.15em; }
+.bi-kpi-delta { font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; min-height: 1.3em; }
+.bi-up { color: var(--color-ok); } .bi-down { color: var(--color-bad); } .bi-flat { color: var(--color-fg-muted); }
+.bi-note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
+.bi-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: grid; gap: var(--cds-gap-sm); min-width: 0; align-content: start; }
+.bi-card h2 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.bi-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); gap: var(--cds-gap-md); }
+.bi-chart { position: relative; min-height: 280px; }
+.bi-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); min-height: 1.3em; }
+.bi-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.bi-legend i, .bi-tip i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.bi-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; display: grid; gap: 2px; min-width: 11rem; z-index: 2; }
+.bi-tip .bi-tip-h { color: var(--cds-text-secondary); }
+.bi-tip div { display: flex; align-items: center; gap: 6px; }
+.bi-tip div b { margin-left: auto; font-weight: 500; padding-left: var(--cds-pad-sm); }
+.bi-wrap { overflow: auto; max-width: 100%; }
+.bi-wrap.bi-tall { max-height: 26rem; }
+.bi-tbl { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.bi-tbl th { position: sticky; top: 0; background: var(--color-panel); text-align: right; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.bi-tbl td { text-align: right; padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.bi-tbl th.t, .bi-tbl td.t { text-align: left; }
+.bi-tbl td.w { white-space: normal; min-width: 14rem; }
+.bi-tbl tr.bi-click { cursor: pointer; }
+.bi-tbl tr.bi-click:hover td { background: var(--color-bg); }
+.bi-tbl tr.bi-sel td { background: var(--color-bg); font-weight: 600; }
+.bi-bar { display: inline-grid; grid-template-columns: 4.5rem auto; align-items: center; gap: 8px; }
+.bi-bar span { height: 6px; border-radius: 3px; background: var(--cds-chart-muted); display: block; }
+.bi-sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
+.bi-bad { color: var(--color-bad); }
+.bi-fail { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: inherit; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.bi-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+.bi [data-dash-source-state=empty] { color: transparent; }
+.bi [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.bi-defs { display: grid; gap: var(--cds-gap-xs); }
+</style><style>
+.bi-tabs { display: flex; gap: var(--cds-gap-xs); border-bottom: 1px solid var(--color-border-line); flex-wrap: wrap; }
+.bi-tabs button { font: inherit; font-size: var(--cds-font-size-body); padding: var(--cds-pad-sm) var(--cds-pad-md); background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--color-fg-muted); cursor: pointer; margin-bottom: -1px; }
+.bi-tabs button[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+.bi-tabs button:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+.bi-pane { display: grid; gap: var(--cds-gap-lg); }
+.bi-abc { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--cds-gap-md); }
+.bi-abc > div { display: grid; gap: var(--cds-gap-xs); padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); }
+.bi-abc .bi-abc-l { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); line-height: 1; }
+.bi-abc .bi-abc-n { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.bi-abc .bi-abc-v { font-variant-numeric: tabular-nums; }
+.bi-pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: var(--cds-font-size-caption); border: 1px solid currentColor; white-space: nowrap; }
+.bi-p-Ruptura { color: var(--color-bad); }
+.bi-p-Crítico { color: var(--color-bad); }
+.bi-p-Atenção { color: var(--color-warn); }
+.bi-p-Saudável { color: var(--color-ok); }
+.bi-p-Parado { color: var(--color-fg-muted); }
+.bi-toolbar { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; }
+.bi-search { min-width: 0; flex: 1 1 12rem; max-width: 20rem; }
+</style>
+<div class="bi">
+  <header class="bi-head" id="topo">
+    <h1 class="bi-title">BI Calu Tricot</h1>
+    <p class="bi-take" id="resumo-texto">
+      Receita líquida de <b class="dash-skeleton" data-source="resumo" data-field="receita_liquida" data-row="0">—</b>
+      em <b class="dash-skeleton" data-source="resumo" data-field="pedidos" data-row="0">—</b> pedidos no período.
+      <b class="dash-skeleton" data-source="por_canal" data-field="canal" data-row="0">—</b> é o maior canal, com
+      <b class="dash-skeleton" data-source="por_canal" data-field="participacao" data-row="0">—</b> da receita.
+    </p>
+  </header>
+
+  <nav class="bi-tabs" role="tablist" aria-label="Seções">
+    <button type="button" role="tab" id="tab-vendas" data-tab="vendas" aria-selected="true">Vendas</button>
+    <button type="button" role="tab" id="tab-produtos" data-tab="produtos" aria-selected="false">Produtos</button>
+    <button type="button" role="tab" id="tab-estoque" data-tab="estoque" aria-selected="false">Estoque</button>
+    <button type="button" role="tab" id="tab-devolucoes" data-tab="devolucoes" aria-selected="false">Devoluções</button>
+  </nav>
+
+  <div class="bi-controls" id="filtros">
+    <div class="bi-seg" role="group" aria-label="Período">
+      <button type="button" class="bi-preset" data-p="7d" aria-pressed="false">7 dias</button>
+      <button type="button" class="bi-preset" data-p="30d" aria-pressed="true">30 dias</button>
+      <button type="button" class="bi-preset" data-p="mes" aria-pressed="false">Este mês</button>
+      <button type="button" class="bi-preset" data-p="mesant" aria-pressed="false">Mês passado</button>
+    </div>
+    <label class="bi-lbl" for="bi-ini">De <input id="bi-ini" class="bi-field" type="date" min="2026-09-01" max="2099-12-31"></label>
+    <label class="bi-lbl" for="bi-fim">até <input id="bi-fim" class="bi-field" type="date" min="2026-09-01" max="2099-12-31"></label>
+    <label class="bi-lbl" for="bi-canal" id="bi-canal-lbl">Canal
+      <select id="bi-canal" class="bi-field" data-source="por_canal"></select>
+    </label>
+    <button type="button" class="bi-btn" id="bi-reset">Limpar filtros</button>
+    <span class="bi-fresh" id="bi-fresh" data-source="carga"></span>
+  </div>
+
+  <!-- ================= VENDAS ================= -->
+  <div class="bi-pane" id="vendas" data-pane="vendas">
+    <section class="bi-kpis" id="indicadores" aria-label="Indicadores do período">
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Receita líquida</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="resumo" data-field="receita_liquida" data-row="0">—</span>
+        <span class="bi-kpi-delta" data-source="resumo" data-field="var_receita" data-row="0" data-good="up">—</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Pedidos</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="resumo" data-field="pedidos" data-row="0">—</span>
+        <span class="bi-kpi-delta" data-source="resumo" data-field="var_pedidos" data-row="0" data-good="up">—</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Ticket médio</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="resumo" data-field="ticket_medio" data-row="0">—</span>
+        <span class="bi-kpi-delta" data-source="resumo" data-field="var_ticket" data-row="0" data-good="up">—</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Margem sobre o custo do produto</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="resumo" data-field="margem_pct" data-row="0">—</span>
+        <span class="bi-kpi-delta" data-source="resumo" data-field="var_margem_pp" data-row="0" data-good="up" data-pp="1">—</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Desconto sobre o preço</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="resumo" data-field="desconto_pct" data-row="0">—</span>
+        <span class="bi-kpi-delta" data-source="resumo" data-field="var_desconto_pp" data-row="0" data-good="down" data-pp="1">—</span>
+      </div>
+    </section>
+    <p class="bi-note" id="bi-comp"></p>
+
+    <section class="bi-card" id="receita-diaria">
+      <h2>Receita líquida por dia</h2>
+      <p class="bi-note">Por canal, empilhada. Passe o mouse sobre um dia para ver os valores.</p>
+      <div class="bi-legend" id="bi-legenda" data-source="diario"></div>
+      <div class="bi-chart" id="bi-grafico" data-source="diario"></div>
+    </section>
+
+    <div class="bi-grid2">
+      <section class="bi-card" id="canais">
+        <h2>Canais</h2>
+        <p class="bi-note">Clique num canal para filtrar o painel. Taxas Bling: comissão e frete que o Bling registra (só Mercado Livre, Shein e Magalu).</p>
+        <div class="bi-wrap">
+          <table class="bi-tbl" id="bi-tab-canal" data-source="por_canal" data-row-key="canal">
+            <thead><tr>
+              <th class="t" data-field="canal">Canal</th>
+              <th data-field="pedidos">Pedidos</th>
+              <th data-field="receita_liquida">Receita líquida</th>
+              <th data-field="participacao">Part.</th>
+              <th data-field="ticket_medio">Ticket</th>
+              <th data-field="desconto_pct">Desconto</th>
+              <th data-field="margem_pct">Margem</th>
+              <th data-field="taxas_bling">Taxas Bling</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="bi-card" id="lojas">
+        <h2>Lojas</h2>
+        <p class="bi-note">Sem custo: parte da receita de produtos sem preço de custo no Bling, que fica fora da margem.</p>
+        <div class="bi-wrap bi-tall">
+          <table class="bi-tbl" id="bi-tab-loja" data-source="por_loja" data-row-key="loja">
+            <thead><tr>
+              <th class="t" data-field="loja">Loja</th>
+              <th data-field="pedidos">Pedidos</th>
+              <th data-field="receita_liquida">Receita líquida</th>
+              <th data-field="ticket_medio">Ticket</th>
+              <th data-field="desconto_pct">Desconto</th>
+              <th data-field="margem_pct">Margem</th>
+              <th data-field="sem_custo_pct">Sem custo</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ================= PRODUTOS ================= -->
+  <div class="bi-pane" id="produtos" data-pane="produtos" hidden>
+    <section class="bi-card" id="curva-abc">
+      <h2>Curva ABC dos modelos</h2>
+      <p class="bi-note">Modelos em ordem de receita líquida no período. A soma até 80% da receita, B de 80% a 95%, C o restante.</p>
+      <div class="bi-abc" data-source="abc">
+        <div><span class="bi-abc-l">A</span>
+          <span class="bi-abc-v"><b data-source="abc" data-field="modelos" data-where="classe=A">—</b> modelos (<span data-source="abc" data-field="part_modelos" data-where="classe=A">—</span>)</span>
+          <span class="bi-abc-n"><span data-source="abc" data-field="part_receita" data-where="classe=A">—</span> da receita · <span data-source="abc" data-field="receita_liquida" data-where="classe=A">—</span></span></div>
+        <div><span class="bi-abc-l">B</span>
+          <span class="bi-abc-v"><b data-source="abc" data-field="modelos" data-where="classe=B">—</b> modelos (<span data-source="abc" data-field="part_modelos" data-where="classe=B">—</span>)</span>
+          <span class="bi-abc-n"><span data-source="abc" data-field="part_receita" data-where="classe=B">—</span> da receita · <span data-source="abc" data-field="receita_liquida" data-where="classe=B">—</span></span></div>
+        <div><span class="bi-abc-l">C</span>
+          <span class="bi-abc-v"><b data-source="abc" data-field="modelos" data-where="classe=C">—</b> modelos (<span data-source="abc" data-field="part_modelos" data-where="classe=C">—</span>)</span>
+          <span class="bi-abc-n"><span data-source="abc" data-field="part_receita" data-where="classe=C">—</span> da receita · <span data-source="abc" data-field="receita_liquida" data-where="classe=C">—</span></span></div>
+      </div>
+    </section>
+
+    <section class="bi-card" id="categorias">
+      <h2>Categorias</h2>
+      <p class="bi-note">Categoria do produto no Bling. Margem sobre o custo do produto.</p>
+      <div class="bi-wrap">
+        <table class="bi-tbl" id="bi-tab-cat" data-source="categorias" data-row-key="categoria">
+          <thead><tr>
+            <th class="t" data-field="categoria">Categoria</th>
+            <th data-field="modelos">Modelos</th>
+            <th data-field="pecas">Peças</th>
+            <th data-field="receita_liquida">Receita líquida</th>
+            <th data-field="participacao">Part.</th>
+            <th data-field="preco_medio">Preço médio</th>
+            <th data-field="desconto_pct">Desconto</th>
+            <th data-field="margem_pct">Margem</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="bi-grid2">
+      <section class="bi-card" id="cores">
+        <h2>Cores mais vendidas</h2>
+        <p class="bi-note">As 12 cores com mais peças vendidas no período, somando todos os modelos.</p>
+        <div class="bi-wrap">
+          <table class="bi-tbl" id="bi-tab-cor" data-source="cor_tamanho" data-row-key="chave">
+            <thead><tr>
+              <th class="t" data-field="valor">Cor</th>
+              <th data-field="pecas">Peças</th>
+              <th data-field="participacao">Part.</th>
+              <th data-field="receita_liquida">Receita líquida</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="bi-card" id="tamanhos">
+        <h2>Tamanhos mais vendidos</h2>
+        <p class="bi-note">Os 12 tamanhos com mais peças vendidas no período. Itens sem tamanho no nome ficam de fora.</p>
+        <div class="bi-wrap">
+          <table class="bi-tbl" id="bi-tab-tam" data-source="cor_tamanho" data-row-key="chave">
+            <thead><tr>
+              <th class="t" data-field="valor">Tamanho</th>
+              <th data-field="pecas">Peças</th>
+              <th data-field="participacao">Part.</th>
+              <th data-field="receita_liquida">Receita líquida</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <section class="bi-card" id="modelos">
+      <h2>Modelos mais vendidos</h2>
+      <p class="bi-note">Os 30 modelos com maior receita líquida no período, somando todas as cores e tamanhos, com a classe na curva ABC.</p>
+      <div class="bi-wrap bi-tall">
+        <table class="bi-tbl" id="bi-tab-modelo" data-source="modelos" data-row-key="modelo">
+          <thead><tr>
+            <th class="t" data-field="modelo">Modelo</th>
+            <th class="t" data-field="descricao">Produto</th>
+            <th class="t" data-field="categoria">Categoria</th>
+            <th class="t" data-field="classe">ABC</th>
+            <th data-field="pecas">Peças</th>
+            <th data-field="receita_liquida">Receita líquida</th>
+            <th data-field="preco_medio">Preço médio</th>
+            <th data-field="margem_pct">Margem</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= ESTOQUE ================= -->
+  <div class="bi-pane" id="estoque" data-pane="estoque" hidden>
+    <p class="bi-note">Estoque disponível no Bling, atualizado a cada 6 horas. A cobertura usa as vendas dos últimos 30 dias em todos os canais; os filtros de período e canal não mudam esta aba.</p>
+    <section class="bi-kpis" id="estoque-indicadores" aria-label="Indicadores de estoque">
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Peças em estoque</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="estoque_resumo" data-field="pecas" data-row="0">—</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Valor em estoque, a custo</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="estoque_resumo" data-field="valor_custo" data-row="0">—</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Modelos em ruptura</span>
+        <span class="bi-kpi-val dash-skeleton bi-bad" data-source="estoque_resumo" data-field="modelos_ruptura" data-row="0">—</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Modelos com menos de 15 dias</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="estoque_resumo" data-field="modelos_criticos" data-row="0">—</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Valor parado (mais de 120 dias)</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="estoque_resumo" data-field="valor_parado" data-row="0">—</span>
+      </div>
+    </section>
+
+    <section class="bi-card" id="cobertura">
+      <h2>Cobertura por modelo</h2>
+      <p class="bi-note">Ruptura: vendeu nos últimos 30 dias e está sem estoque. Crítico: menos de 15 dias. Atenção: de 15 a 30. Saudável: até 120. Parado: mais de 120 dias ou sem venda.</p>
+      <div class="bi-toolbar">
+        <div class="bi-seg" role="group" aria-label="Situação" id="bi-sit">
+          <button type="button" data-s="" aria-pressed="true">Todos</button>
+          <button type="button" data-s="Ruptura" aria-pressed="false">Ruptura</button>
+          <button type="button" data-s="Crítico" aria-pressed="false">Crítico</button>
+          <button type="button" data-s="Atenção" aria-pressed="false">Atenção</button>
+          <button type="button" data-s="Saudável" aria-pressed="false">Saudável</button>
+          <button type="button" data-s="Parado" aria-pressed="false">Parado</button>
+        </div>
+        <input id="bi-busca" class="bi-field bi-search" type="search" placeholder="Buscar modelo ou produto" aria-label="Buscar modelo ou produto">
+      </div>
+      <div class="bi-wrap bi-tall">
+        <table class="bi-tbl" id="bi-tab-estoque" data-source="estoque_modelos" data-row-key="modelo">
+          <thead><tr>
+            <th class="t" data-field="modelo">Modelo</th>
+            <th class="t" data-field="descricao">Produto</th>
+            <th class="t" data-field="situacao">Situação</th>
+            <th data-field="estoque">Estoque</th>
+            <th data-field="vendidas_30d">Vendas 30 dias</th>
+            <th data-field="cobertura_dias">Cobertura</th>
+            <th data-field="skus_zerados">SKUs zerados</th>
+            <th data-field="valor_custo">Valor a custo</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= DEVOLUÇÕES ================= -->
+  <div class="bi-pane" id="devolucoes" data-pane="devolucoes" hidden>
+    <p class="bi-note">Reclamações e devoluções do Mercado Livre (contas Calu, Romana e Alfredo), lidas direto da API do Mercado Livre pela data de abertura da reclamação. O filtro de canal não se aplica a esta aba.</p>
+    <section class="bi-kpis" aria-label="Indicadores de devolução">
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Devoluções reais</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="dev_resumo" data-field="devolucoes" data-row="0">—</span>
+        <span class="bi-kpi-delta bi-flat" id="dev-taxa"></span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Reclamações abertas</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="dev_resumo" data-field="reclamacoes" data-row="0">—</span>
+        <span class="bi-kpi-delta bi-flat" id="dev-taxa-recl"></span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Dinheiro devolvido ao comprador</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="dev_resumo" data-field="reembolsadas" data-row="0">—</span>
+        <span class="bi-kpi-delta bi-flat">reclamações reembolsadas</span>
+      </div>
+      <div class="bi-kpi">
+        <span class="bi-kpi-lbl">Devoluções a caminho</span>
+        <span class="bi-kpi-val dash-skeleton" data-source="dev_resumo" data-field="a_caminho" data-row="0">—</span>
+        <span class="bi-kpi-delta bi-flat">etiqueta gerada ou em trânsito</span>
+      </div>
+    </section>
+
+    <section class="bi-card">
+      <h2>Modelos com mais devoluções</h2>
+      <p class="bi-note">Taxa: peças devolvidas sobre peças vendidas no Mercado Livre no mesmo período. Motivo principal: o mais comum entre as reclamações do modelo.</p>
+      <div class="bi-wrap bi-tall">
+        <table class="bi-tbl" id="bi-tab-devmod" data-source="dev_modelos" data-row-key="modelo">
+          <thead><tr>
+            <th class="t" data-field="modelo">Modelo</th>
+            <th class="t" data-field="descricao">Produto</th>
+            <th data-field="devolucoes">Devoluções</th>
+            <th data-field="reclamacoes">Reclamações</th>
+            <th data-field="pecas_ml">Vendidas no ML</th>
+            <th data-field="taxa_devolucao">Taxa de devolução</th>
+            <th class="t" data-field="motivo_principal">Motivo principal</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="bi-grid2">
+      <section class="bi-card">
+        <h2>Motivos</h2>
+        <p class="bi-note">Motivo informado pelo comprador ao abrir a reclamação.</p>
+        <div class="bi-wrap">
+          <table class="bi-tbl" id="bi-tab-devmot" data-source="dev_motivos" data-row-key="motivo">
+            <thead><tr>
+              <th class="t" data-field="motivo">Motivo</th>
+              <th data-field="reclamacoes">Reclamações</th>
+              <th data-field="participacao">Part.</th>
+              <th data-field="devolucoes">Viraram devolução</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="bi-card">
+        <h2>Por conta</h2>
+        <p class="bi-note">Pedidos: vendas da conta no Mercado Livre segundo o Bling, no mesmo período.</p>
+        <div class="bi-wrap">
+          <table class="bi-tbl" id="bi-tab-devconta" data-source="dev_contas" data-row-key="conta">
+            <thead><tr>
+              <th class="t" data-field="conta">Conta</th>
+              <th data-field="pedidos_ml">Pedidos</th>
+              <th data-field="reclamacoes">Reclamações</th>
+              <th data-field="devolucoes">Devoluções</th>
+              <th data-field="taxa_reclamacao">Taxa recl.</th>
+              <th data-field="taxa_devolucao">Taxa dev.</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <div class="bi-grid2">
+      <section class="bi-card">
+        <h2>Situação da devolução</h2>
+        <div class="bi-wrap">
+          <table class="bi-tbl" id="bi-tab-devsit" data-source="dev_situacao" data-row-key="chave">
+            <thead><tr><th class="t" data-field="valor">Situação</th><th data-field="reclamacoes">Devoluções</th><th data-field="participacao">Part.</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="bi-card">
+        <h2>Tipo de reclamação e dinheiro</h2>
+        <div class="bi-wrap">
+          <table class="bi-tbl" id="bi-tab-devtipo" data-source="dev_situacao" data-row-key="chave">
+            <thead><tr><th class="t" data-field="valor">Tipo</th><th data-field="reclamacoes">Reclamações</th><th data-field="participacao">Part.</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="bi-wrap">
+          <table class="bi-tbl" id="bi-tab-devdin" data-source="dev_situacao" data-row-key="chave">
+            <thead><tr><th class="t" data-field="valor">Dinheiro da devolução</th><th data-field="reclamacoes">Devoluções</th><th data-field="participacao">Part.</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="bi-defs" id="definicoes">
+    <p class="bi-note"><b>Receita líquida</b>: valor dos produtos nos pedidos de venda do Bling, menos os descontos. Não inclui frete cobrado do cliente. Pedidos cancelados ficam de fora.</p>
+    <p class="bi-note"><b>Margem sobre o custo do produto</b>: receita líquida menos o preço de custo cadastrado no Bling, dividido pela receita. Ainda não desconta comissões, frete, impostos nem anúncios. O Bling guarda só o custo atual, então o painel registra o custo de cada produto todo dia desde 09/10/2026; vendas anteriores usam o primeiro custo registrado.</p>
+    <p class="bi-note"><b>Desconto</b>: desconto do pedido sobre o preço dos produtos. Em Shopee e TikTok Shop pode incluir cupom pago pela própria plataforma.</p>
+    <p class="bi-note"><b>Devolução real</b>: reclamação do Mercado Livre em que o comprador recebeu etiqueta de devolução e não a cancelou nem deixou expirar. Cancelamentos antes do envio e entregas não recebidas contam como reclamação, não como devolução.</p>
+    <p class="bi-note"><b>Modelo</b>: a parte do SKU antes do primeiro hífen (2470-3 é o modelo 2470). Kits usam o próprio saldo calculado pelo Bling.</p>
+  </section>
+</div>
+<footer class="rodape"><span>Dados do Bling e do Mercado Livre, atualizados a cada poucos minutos. Somente leitura.</span><button type="button" id="sair">Sair</button></footer>
+</main>
+<script>
+// Substitui o runtime do painel: busca os dados na função painel-dados com a senha.
+window.dash = (() => {
+  const URL_DADOS = 'https://dbzgkhetrxjunzypowjy.supabase.co/functions/v1/painel-dados';
+  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao'];
+  const SEM_FILTRO = ['estoque_resumo', 'estoque_modelos', 'carga'];
+  const PADRAO = { inicio: null, fim: null, canal: null };
+  const store = {}; [...COM_FILTRO, ...SEM_FILTRO].forEach((k) => { store[k] = { status: 'loading', data: [] }; });
+  let params = { ...PADRAO };
+  try { const p = JSON.parse(sessionStorage.getItem('bi_params') || 'null'); if (p) params = { ...PADRAO, ...p }; } catch (e) {}
+  const ouvintes = [];
+  let senha = '';
+  let pedido = 0;
+  const avisar = () => ouvintes.forEach((f) => { try { f(); } catch (e) { console.error(e); } });
+  const buscar = async (lista) => {
+    const n = ++pedido;
+    document.querySelector('.bi')?.classList.add('atualizando');
+    try {
+      const r = await fetch(URL_DADOS, { method: 'POST', headers: { 'content-type': 'application/json', 'x-senha': senha },
+        body: JSON.stringify({ consultas: lista, ...params }) });
+      if (r.status === 401) { window.sairBI && window.sairBI('Senha incorreta ou alterada.'); return; }
+      const j = await r.json();
+      if (n !== pedido && lista === COM_FILTRO) return;
+      lista.forEach((k) => {
+        const v = j.dados?.[k];
+        store[k] = Array.isArray(v) ? { status: 'ok', data: v } : { status: 'error', data: [] };
+      });
+    } catch (e) {
+      lista.forEach((k) => { if (store[k].status !== 'ok') store[k] = { status: 'error', data: [] }; });
+    } finally {
+      if (n === pedido) document.querySelector('.bi')?.classList.remove('atualizando');
+    }
+    avisar();
+  };
+  return {
+    colors: ['#c96442', '#3b7dd8', '#2f9e6e', '#b8860b', '#8e5bd0', '#d0517e', '#4aa3a3', '#7a7a2e'],
+    data: (id) => store[id] || { status: 'error', data: [] },
+    params: () => ({ ...params }),
+    setParams: (p) => {
+      params = { ...params, ...p };
+      try { sessionStorage.setItem('bi_params', JSON.stringify(params)); } catch (e) {}
+      avisar(); buscar(COM_FILTRO);
+    },
+    resetParams: () => { window.dash.setParams({ ...PADRAO }); },
+    onData: (f) => { ouvintes.push(f); },
+    setLink: (nome) => { try { history.replaceState(null, '', '#' + nome); } catch (e) {} },
+    loader: () => {},
+    iniciar: (s) => {
+      senha = s;
+      buscar([...COM_FILTRO, ...SEM_FILTRO]);
+      setInterval(() => { if (!document.hidden) buscar([...COM_FILTRO, ...SEM_FILTRO]); }, 5 * 60 * 1000);
+    },
+    testar: async (s) => {
+      const r = await fetch(URL_DADOS, { method: 'POST', headers: { 'content-type': 'application/json', 'x-senha': s }, body: '{"consultas":[]}' });
+      return r.status;
+    },
+  };
+})();
+</script>
+<script>
+(() => {
+  const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+  const brl2 = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const brlC = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 });
+  const int = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
+  const pct = new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const num1 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const big = (v) => (Math.abs(v) >= 1e6 ? brlC.format(v) : brl.format(v));
+  const dBr = (s) => (s ? s.slice(8, 10) + '/' + s.slice(5, 7) : '');
+  const ok = (id) => dash.data(id).status === 'ok';
+
+  // ---------- filtros ----------
+  const ymd = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const presets = () => {
+    const h = new Date();
+    const d7 = new Date(h); d7.setDate(h.getDate() - 6);
+    const m0 = new Date(h.getFullYear(), h.getMonth(), 1);
+    const p0 = new Date(h.getFullYear(), h.getMonth() - 1, 1);
+    const p1 = new Date(h.getFullYear(), h.getMonth(), 0);
+    return {
+      '7d': { inicio: ymd(d7), fim: ymd(h) },
+      '30d': { inicio: null, fim: null },
+      mes: { inicio: ymd(m0), fim: ymd(h) },
+      mesant: { inicio: ymd(p0), fim: ymd(p1) },
+    };
+  };
+  document.querySelectorAll('.bi-preset').forEach((b) => b.addEventListener('click', () => dash.setParams(presets()[b.dataset.p])));
+  const ini = document.getElementById('bi-ini');
+  const fim = document.getElementById('bi-fim');
+  const canalSel = document.getElementById('bi-canal');
+  ini.addEventListener('change', () => { if (ini.value && ini.validity.valid) dash.setParams({ inicio: ini.value }); });
+  fim.addEventListener('change', () => { if (fim.value && fim.validity.valid) dash.setParams({ fim: fim.value }); });
+  canalSel.addEventListener('change', () => dash.setParams({ canal: canalSel.value || null }));
+  document.getElementById('bi-reset').addEventListener('click', () => dash.resetParams());
+
+  // ---------- helpers ----------
+  const clearSkel = (root, id) => {
+    const st = dash.data(id).status;
+    if (st !== 'loading') root.querySelectorAll('.dash-skeleton[data-source="' + id + '"]').forEach((e) => e.classList.remove('dash-skeleton'));
+  };
+  const failBox = (el, id) => {
+    const st = dash.data(id).status;
+    if (st === 'error' || st === 'connect') {
+      const f = document.createElement('div');
+      f.className = 'bi-fail';
+      f.textContent = 'Não foi possível carregar';
+      el.replaceChildren(f);
+      return true;
+    }
+    return false;
+  };
+  const coresCanal = () => {
+    const ordem = ok('por_canal') ? dash.data('por_canal').data.map((r) => r.canal) : [];
+    const m = new Map();
+    ordem.forEach((c, i) => m.set(c, i < dash.colors.length ? dash.colors[i] : 'var(--cds-chart-muted)'));
+    return { ordem, cor: (c) => m.get(c) || 'var(--cds-chart-muted)' };
+  };
+
+  // ---------- indicadores e resumo ----------
+  const fmtKpi = {
+    receita_liquida: (v) => big(v),
+    pedidos: (v) => int.format(v),
+    ticket_medio: (v) => brl2.format(v),
+    margem_pct: (v) => pct.format(v),
+    desconto_pct: (v) => pct.format(v),
+  };
+  const drawResumo = () => {
+    const r = dash.data('resumo');
+    const row = r.status === 'ok' ? r.data[0] : null;
+    document.querySelectorAll('[data-source="resumo"]').forEach((el) => {
+      const f = el.dataset.field;
+      if (!row || row[f] == null) {
+        el.textContent = '—';
+        el.className = el.className.replace(/\bbi-(up|down|flat)\b/g, '').trim();
+        return;
+      }
+      const v = row[f];
+      if (el.classList.contains('bi-kpi-delta')) {
+        const pp = el.dataset.pp === '1';
+        const txt = pp ? (v >= 0 ? '+' : '−') + num1.format(Math.abs(v * 100)) + ' p.p.' : (v >= 0 ? '+' : '−') + pct.format(Math.abs(v));
+        el.textContent = txt + ' vs ' + dBr(row.inicio_anterior) + '–' + dBr(row.fim_anterior);
+        const bom = el.dataset.good === 'up' ? v > 0.0005 : v < -0.0005;
+        const ruim = el.dataset.good === 'up' ? v < -0.0005 : v > 0.0005;
+        el.classList.remove('bi-up', 'bi-down', 'bi-flat');
+        el.classList.add(bom ? 'bi-up' : ruim ? 'bi-down' : 'bi-flat');
+      } else {
+        el.textContent = (fmtKpi[f] || ((x) => String(x)))(v);
+      }
+    });
+    clearSkel(document, 'resumo');
+    const comp = document.getElementById('bi-comp');
+    comp.textContent = row
+      ? 'Período: ' + dBr(row.inicio) + ' a ' + dBr(row.fim) + '.' + (row.var_receita == null ? ' O período anterior começa antes de 01/09/2026, quando os dados começam, então não há comparação.' : '')
+      : '';
+  };
+
+  const drawTake = () => {
+    const c = dash.data('por_canal');
+    const row = c.status === 'ok' ? c.data[0] : null;
+    document.querySelectorAll('#resumo-texto [data-source="por_canal"]').forEach((el) => {
+      const f = el.dataset.field;
+      el.textContent = row && row[f] != null ? (f === 'participacao' ? pct.format(row[f]) : String(row[f])) : '—';
+    });
+    clearSkel(document.getElementById('resumo-texto'), 'por_canal');
+  };
+
+  const drawFresh = () => {
+    const el = document.getElementById('bi-fresh');
+    const c = dash.data('carga');
+    if (c.status !== 'ok' || !c.data[0]) { el.textContent = ''; return; }
+    const r = c.data[0];
+    const t = r.ultima_atualizacao || '';
+    el.textContent = 'Bling sincronizado ' + dBr(t.slice(0, 10)) + ' às ' + t.slice(11, 16) +
+      ' · ' + int.format(r.pedidos) + ' pedidos desde ' + dBr(r.primeiro_dia) + '/' + (r.primeiro_dia || '').slice(0, 4) +
+      (r.estoque_atualizado ? ' · estoque às ' + r.estoque_atualizado.slice(11, 16) + ' de ' + dBr(r.estoque_atualizado.slice(0, 10)) : '');
+  };
+
+  const drawFiltros = () => {
+    const p = dash.params();
+    const pr = presets();
+    document.querySelectorAll('.bi-preset').forEach((b) => {
+      const v = pr[b.dataset.p];
+      b.setAttribute('aria-pressed', String((p.inicio ?? null) === v.inicio && (p.fim ?? null) === v.fim));
+    });
+    const r = ok('resumo') ? dash.data('resumo').data[0] : null;
+    if (ini !== document.activeElement) ini.value = p.inicio ?? (r ? r.inicio : '');
+    if (fim !== document.activeElement) fim.value = p.fim ?? (r ? r.fim : '');
+    const canais = ok('por_canal') ? dash.data('por_canal').data.map((x) => x.canal) : [];
+    const atual = p.canal ?? '';
+    if (atual && !canais.includes(atual)) canais.push(atual);
+    canalSel.replaceChildren(new Option('Todos', ''), ...canais.map((c) => new Option(c, c)));
+    canalSel.value = atual;
+  };
+
+  // ---------- tabelas ----------
+  const fillTable = (tableId, id, cols, opts = {}) => {
+    const t = document.getElementById(tableId);
+    const tb = t.querySelector('tbody');
+    const d = dash.data(id);
+    if (d.status === 'error' || d.status === 'connect') {
+      const tr = document.createElement('tr'); const td = document.createElement('td');
+      td.colSpan = cols.length; const f = document.createElement('div'); f.className = 'bi-fail'; f.textContent = 'Não foi possível carregar';
+      td.appendChild(f); tr.appendChild(td); tb.replaceChildren(tr); return;
+    }
+    if (d.status !== 'ok') { tb.replaceChildren(); return; }
+    let rows = d.data;
+    if (opts.filter) rows = rows.filter(opts.filter);
+    const maxBar = opts.bar ? d3.max(rows, (r) => r[opts.bar]) || 1 : 1;
+    tb.replaceChildren(...rows.map((r) => {
+      const tr = document.createElement('tr');
+      if (opts.key) tr.dataset.key = r[opts.key];
+      if (opts.click) { tr.className = 'bi-click'; tr.tabIndex = 0; }
+      if (opts.selected && opts.selected === r[opts.key]) tr.classList.add('bi-sel');
+      cols.forEach((c) => {
+        const td = document.createElement('td');
+        if (c.t) td.className = 't';
+        if (c.w) td.className = 't w';
+        const v = r[c.f];
+        if (c.f === opts.key && opts.swatch) {
+          const sw = document.createElement('i'); sw.className = 'bi-sw'; sw.style.background = opts.swatch(v);
+          td.append(sw, document.createTextNode(v == null ? '' : String(v)));
+        } else if (c.pill) {
+          const p = document.createElement('span'); p.className = 'bi-pill bi-p-' + v; p.textContent = v == null ? '—' : String(v);
+          td.appendChild(p);
+        } else if (c.f === opts.bar) {
+          const w = document.createElement('span'); w.className = 'bi-bar';
+          const b = document.createElement('span'); b.style.width = Math.max(2, (v / maxBar) * 72) + 'px';
+          const holder = document.createElement('span'); holder.appendChild(b);
+          const txt = document.createElement('em'); txt.style.fontStyle = 'normal'; txt.textContent = v == null ? '—' : c.fmt(v);
+          w.append(holder, txt); td.appendChild(w);
+        } else {
+          td.textContent = v == null ? '—' : c.fmt ? c.fmt(v) : String(v);
+        }
+        if (c.neg && v != null && v < 0) td.classList.add('bi-bad');
+        tr.appendChild(td);
+      });
+      return tr;
+    }));
+  };
+
+  // valores soltos marcados com data-where / data-row
+  const fillMarks = (id, fmts) => {
+    const d = dash.data(id);
+    document.querySelectorAll('[data-source="' + id + '"][data-field]').forEach((el) => {
+      if (el.tagName === 'TABLE' || el.tagName === 'TH') return;
+      const f = el.dataset.field;
+      let row = null;
+      if (d.status === 'ok') {
+        if (el.dataset.row != null) row = d.data[Number(el.dataset.row)];
+        else if (el.dataset.where) {
+          const conds = el.dataset.where.split('&').map((p) => p.split('=').map(decodeURIComponent));
+          row = d.data.find((r) => conds.every(([k, v]) => String(r[k]) === v));
+        }
+      }
+      el.textContent = row && row[f] != null ? (fmts[f] || ((x) => String(x)))(row[f]) : '—';
+      if (d.status !== 'loading') el.classList.remove('dash-skeleton');
+    });
+  };
+
+  // ---------- abas ----------
+  const tabs = Array.from(document.querySelectorAll('.bi-tabs [data-tab]'));
+  let abaAtual = 'vendas';
+  const mostrar = (nome, link = true) => {
+    if (!tabs.some((b) => b.dataset.tab === nome)) return;
+    abaAtual = nome;
+    tabs.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === nome)));
+    document.querySelectorAll('[data-pane]').forEach((p) => { p.hidden = p.dataset.pane !== nome; });
+    document.getElementById('filtros').querySelectorAll('.bi-seg, .bi-lbl, #bi-reset').forEach((e) => { e.hidden = nome === 'estoque'; });
+    document.getElementById('bi-canal-lbl').hidden = nome === 'estoque' || nome === 'devolucoes';
+    if (link) dash.setLink(nome);
+    if (nome === 'vendas') drawChart();
+  };
+  tabs.forEach((b) => b.addEventListener('click', () => mostrar(b.dataset.tab)));
+
+  // ---------- filtro da tabela de estoque ----------
+  let sitFiltro = '';
+  let busca = '';
+  document.querySelectorAll('#bi-sit button').forEach((b) => b.addEventListener('click', () => {
+    sitFiltro = b.dataset.s;
+    document.querySelectorAll('#bi-sit button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    drawEstoque();
+  }));
+  document.getElementById('bi-busca').addEventListener('input', (e) => { busca = e.target.value.trim().toLowerCase(); drawEstoque(); });
+  const drawEstoque = () => {
+    fillTable('bi-tab-estoque', 'estoque_modelos', [
+      { f: 'modelo', t: true }, { f: 'descricao', w: true }, { f: 'situacao', t: true, pill: true },
+      { f: 'estoque', fmt: (v) => int.format(v) }, { f: 'vendidas_30d', fmt: (v) => int.format(v) },
+      { f: 'cobertura_dias', fmt: (v) => int.format(v) + ' dias' }, { f: 'skus_zerados', fmt: (v) => int.format(v) },
+      { f: 'valor_custo', fmt: (v) => brl.format(v) },
+    ], {
+      key: 'modelo',
+      filter: (r) => (!sitFiltro || r.situacao === sitFiltro) &&
+        (!busca || String(r.modelo).toLowerCase().includes(busca) || String(r.descricao || '').toLowerCase().includes(busca)),
+    });
+  };
+
+  document.getElementById('bi-tab-canal').addEventListener('click', (e) => {
+    const tr = e.target.closest('tr[data-key]');
+    if (!tr) return;
+    const atual = dash.params().canal ?? null;
+    dash.setParams({ canal: atual === tr.dataset.key ? null : tr.dataset.key });
+  });
+  document.getElementById('bi-tab-canal').addEventListener('keydown', (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr[data-key]')) { e.preventDefault(); e.target.click(); }
+  });
+
+  // ---------- gráfico ----------
+  const tip = document.createElement('div');
+  tip.className = 'bi-tip'; tip.hidden = true;
+  const drawChart = () => {
+    const box = document.getElementById('bi-grafico');
+    const leg = document.getElementById('bi-legenda');
+    const d = dash.data('diario');
+    if (failBox(box, 'diario')) { leg.replaceChildren(); return; }
+    if (d.status !== 'ok') { box.replaceChildren(); leg.replaceChildren(); return; }
+    const { ordem, cor } = coresCanal();
+    const canais = Array.from(new Set(d.data.map((r) => r.canal)));
+    canais.sort((a, b) => (ordem.indexOf(a) === -1 ? 99 : ordem.indexOf(a)) - (ordem.indexOf(b) === -1 ? 99 : ordem.indexOf(b)));
+    const porDia = d3.rollup(d.data, (v) => Object.fromEntries(v.map((x) => [x.canal, x.receita_liquida])), (r) => r.dia);
+    const dias = Array.from(porDia.keys()).sort();
+    const linhas = dias.map((dia) => ({ dia, ...Object.fromEntries(canais.map((c) => [c, porDia.get(dia)[c] || 0])) }));
+    const series = d3.stack().keys(canais)(linhas);
+
+    leg.replaceChildren(...canais.map((c) => {
+      const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = cor(c);
+      s.append(i, document.createTextNode(c)); return s;
+    }));
+
+    const W = Math.max(280, box.clientWidth || 600), H = 280;
+    const maxY = d3.max(linhas, (l) => d3.sum(canais, (c) => l[c])) || 1;
+    const y = d3.scaleLinear([0, maxY], [H - 24, 8]).nice();
+    const ticks = y.ticks(5);
+    const svg = d3.create('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+      .attr('aria-label', 'Receita líquida por dia, por canal');
+    const meas = svg.append('text').attr('font-size', 12).attr('visibility', 'hidden');
+    box.replaceChildren(svg.node());
+    let ml = 0;
+    ticks.forEach((t) => { meas.text(brlC.format(t)); ml = Math.max(ml, meas.node().getComputedTextLength()); });
+    meas.remove();
+    ml = Math.ceil(ml) + 10;
+    const x = d3.scaleBand(dias, [ml, W - 4]).paddingInner(0.25).paddingOuter(0.1);
+
+    svg.append('g').selectAll('line').data(ticks).join('line')
+      .attr('x1', ml).attr('x2', W - 4).attr('y1', (t) => y(t)).attr('y2', (t) => y(t))
+      .attr('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 1);
+    svg.append('g').selectAll('text').data(ticks).join('text')
+      .attr('x', ml - 8).attr('y', (t) => y(t)).attr('dy', '0.32em').attr('text-anchor', 'end')
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((t) => brlC.format(t));
+
+    const g = svg.append('g');
+    series.forEach((s) => {
+      g.append('g').attr('fill', cor(s.key)).selectAll('rect').data(s).join('rect')
+        .attr('x', (p) => x(p.data.dia)).attr('width', x.bandwidth())
+        .attr('y', (p) => y(p[1])).attr('height', (p) => Math.max(0, y(p[0]) - y(p[1])));
+    });
+    svg.append('line').attr('x1', ml).attr('x2', W - 4).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+
+    const step = Math.max(1, Math.ceil(dias.length / Math.max(2, Math.floor((W - ml) / 52))));
+    svg.append('g').selectAll('text').data(dias.filter((_, i) => i % step === 0)).join('text')
+      .attr('x', (dia) => x(dia) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle')
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((dia) => dBr(dia));
+
+    const hl = svg.append('rect').attr('fill', 'var(--color-fg)').attr('opacity', 0).attr('y', 8).attr('height', H - 32).attr('pointer-events', 'none');
+    box.appendChild(tip);
+    svg.append('rect').attr('x', ml).attr('y', 0).attr('width', W - 4 - ml).attr('height', H).attr('fill', 'transparent')
+      .on('mousemove', (ev) => {
+        const [mx] = d3.pointer(ev);
+        const i = Math.min(dias.length - 1, Math.max(0, Math.floor((mx - x(dias[0]) + (x.step() - x.bandwidth()) / 2) / x.step())));
+        const l = linhas[i];
+        hl.attr('x', x(l.dia)).attr('width', x.bandwidth()).attr('opacity', 0.06);
+        const h = document.createElement('span'); h.className = 'bi-tip-h'; h.textContent = dBr(l.dia) + '/' + l.dia.slice(0, 4);
+        const rows = canais.filter((c) => l[c] > 0).reverse().map((c) => {
+          const dv = document.createElement('div'); const i2 = document.createElement('i'); i2.style.background = cor(c);
+          const b = document.createElement('b'); b.textContent = brl.format(l[c]);
+          dv.append(i2, document.createTextNode(c), b); return dv;
+        });
+        const tot = document.createElement('div'); const tb = document.createElement('b'); tb.textContent = brl.format(d3.sum(canais, (c) => l[c]));
+        tot.append(document.createTextNode('Total'), tb);
+        tip.replaceChildren(h, ...rows, tot);
+        tip.hidden = false;
+        const bw = box.clientWidth, tw = tip.offsetWidth;
+        const px = (x(l.dia) / W) * bw;
+        tip.style.left = Math.min(bw - tw, Math.max(0, px + 14 > bw - tw ? px - tw - 14 : px + 14)) + 'px';
+        tip.style.top = '8px';
+      })
+      .on('mouseleave', () => { tip.hidden = true; hl.attr('opacity', 0); });
+  };
+
+  dash.onData(() => {
+    drawFiltros();
+    drawResumo();
+    drawTake();
+    drawFresh();
+    const { cor } = coresCanal();
+    const sel = dash.params().canal ?? null;
+    fillTable('bi-tab-canal', 'por_canal', [
+      { f: 'canal', t: true }, { f: 'pedidos', fmt: (v) => int.format(v) },
+      { f: 'receita_liquida', fmt: (v) => brl.format(v) }, { f: 'participacao', fmt: (v) => pct.format(v) },
+      { f: 'ticket_medio', fmt: (v) => brl2.format(v) }, { f: 'desconto_pct', fmt: (v) => pct.format(v) },
+      { f: 'margem_pct', fmt: (v) => pct.format(v), neg: true }, { f: 'taxas_bling', fmt: (v) => (v ? brl.format(v) : '—') },
+    ], { key: 'canal', click: true, swatch: cor, bar: 'receita_liquida', selected: sel });
+    fillTable('bi-tab-loja', 'por_loja', [
+      { f: 'loja', t: true }, { f: 'pedidos', fmt: (v) => int.format(v) },
+      { f: 'receita_liquida', fmt: (v) => brl.format(v) }, { f: 'ticket_medio', fmt: (v) => brl2.format(v) },
+      { f: 'desconto_pct', fmt: (v) => pct.format(v) }, { f: 'margem_pct', fmt: (v) => pct.format(v), neg: true },
+      { f: 'sem_custo_pct', fmt: (v) => pct.format(v) },
+    ], { key: 'loja' });
+    fillTable('bi-tab-modelo', 'modelos', [
+      { f: 'modelo', t: true }, { f: 'descricao', w: true }, { f: 'categoria', t: true }, { f: 'classe', t: true },
+      { f: 'pecas', fmt: (v) => int.format(v) }, { f: 'receita_liquida', fmt: (v) => brl.format(v) },
+      { f: 'preco_medio', fmt: (v) => brl2.format(v) }, { f: 'margem_pct', fmt: (v) => pct.format(v), neg: true },
+    ], { key: 'modelo' });
+    fillMarks('abc', {
+      modelos: (v) => int.format(v), part_modelos: (v) => pct.format(v),
+      part_receita: (v) => pct.format(v), receita_liquida: (v) => big(v),
+    });
+    fillTable('bi-tab-cat', 'categorias', [
+      { f: 'categoria', t: true }, { f: 'modelos', fmt: (v) => int.format(v) }, { f: 'pecas', fmt: (v) => int.format(v) },
+      { f: 'receita_liquida', fmt: (v) => brl.format(v) }, { f: 'participacao', fmt: (v) => pct.format(v) },
+      { f: 'preco_medio', fmt: (v) => brl2.format(v) }, { f: 'desconto_pct', fmt: (v) => pct.format(v) },
+      { f: 'margem_pct', fmt: (v) => pct.format(v), neg: true },
+    ], { key: 'categoria', bar: 'receita_liquida' });
+    const ctCols = [
+      { f: 'valor', t: true }, { f: 'pecas', fmt: (v) => int.format(v) },
+      { f: 'participacao', fmt: (v) => pct.format(v) }, { f: 'receita_liquida', fmt: (v) => brl.format(v) },
+    ];
+    fillTable('bi-tab-cor', 'cor_tamanho', ctCols, { key: 'chave', bar: 'pecas', filter: (r) => r.dimensao === 'cor' });
+    fillTable('bi-tab-tam', 'cor_tamanho', ctCols, { key: 'chave', bar: 'pecas', filter: (r) => r.dimensao === 'tamanho' });
+    fillMarks('estoque_resumo', {
+      pecas: (v) => int.format(v), valor_custo: (v) => big(v), modelos_ruptura: (v) => int.format(v),
+      modelos_criticos: (v) => int.format(v), valor_parado: (v) => big(v),
+    });
+    drawEstoque();
+    // ---------- devoluções ----------
+    fillMarks('dev_resumo', {
+      devolucoes: (v) => int.format(v), reclamacoes: (v) => int.format(v),
+      reembolsadas: (v) => int.format(v), a_caminho: (v) => int.format(v),
+    });
+    const dr = ok('dev_resumo') ? dash.data('dev_resumo').data[0] : null;
+    document.getElementById('dev-taxa').textContent = dr && dr.taxa_devolucao != null
+      ? pct.format(dr.taxa_devolucao) + ' dos ' + int.format(dr.pedidos_ml) + ' pedidos no ML' : '';
+    document.getElementById('dev-taxa-recl').textContent = dr && dr.taxa_reclamacao != null
+      ? pct.format(dr.taxa_reclamacao) + ' dos pedidos' : '';
+    fillTable('bi-tab-devmod', 'dev_modelos', [
+      { f: 'modelo', t: true }, { f: 'descricao', w: true }, { f: 'devolucoes', fmt: (v) => int.format(v) },
+      { f: 'reclamacoes', fmt: (v) => int.format(v) }, { f: 'pecas_ml', fmt: (v) => int.format(v) },
+      { f: 'taxa_devolucao', fmt: (v) => pct.format(v) }, { f: 'motivo_principal', t: true },
+    ], { key: 'modelo', bar: 'devolucoes' });
+    fillTable('bi-tab-devmot', 'dev_motivos', [
+      { f: 'motivo', t: true }, { f: 'reclamacoes', fmt: (v) => int.format(v) },
+      { f: 'participacao', fmt: (v) => pct.format(v) }, { f: 'devolucoes', fmt: (v) => int.format(v) },
+    ], { key: 'motivo', bar: 'reclamacoes' });
+    fillTable('bi-tab-devconta', 'dev_contas', [
+      { f: 'conta', t: true }, { f: 'pedidos_ml', fmt: (v) => int.format(v) }, { f: 'reclamacoes', fmt: (v) => int.format(v) },
+      { f: 'devolucoes', fmt: (v) => int.format(v) }, { f: 'taxa_reclamacao', fmt: (v) => pct.format(v) },
+      { f: 'taxa_devolucao', fmt: (v) => pct.format(v) },
+    ], { key: 'conta' });
+    const sitCols = [{ f: 'valor', t: true }, { f: 'reclamacoes', fmt: (v) => int.format(v) }, { f: 'participacao', fmt: (v) => pct.format(v) }];
+    fillTable('bi-tab-devsit', 'dev_situacao', sitCols, { key: 'chave', bar: 'reclamacoes', filter: (r) => r.dimensao === 'devolucao' });
+    fillTable('bi-tab-devtipo', 'dev_situacao', sitCols, { key: 'chave', filter: (r) => r.dimensao === 'tipo' });
+    fillTable('bi-tab-devdin', 'dev_situacao', sitCols, { key: 'chave', filter: (r) => r.dimensao === 'dinheiro' });
+    if (abaAtual === 'vendas') drawChart();
+  });
+  const inicial = location.hash.slice(1);
+  if (inicial) mostrar(inicial, false);
+})();
+</script>
+<script>
+(() => {
+  const CH = 'bi_senha';
+  const ler = () => { try { return localStorage.getItem(CH) || ''; } catch (e) { return ''; } };
+  const gravar = (s) => { try { s ? localStorage.setItem(CH, s) : localStorage.removeItem(CH); } catch (e) {} };
+  const tela = document.getElementById('entrar');
+  const app = document.getElementById('app');
+  const form = tela.querySelector('form');
+  const campo = document.getElementById('senha');
+  const erro = tela.querySelector('.erro');
+  const botao = form.querySelector('button');
+  window.sairBI = (msg) => { gravar(''); location.hash = ''; sessionStorage.clear?.(); erro.textContent = msg || ''; app.hidden = true; tela.hidden = false; location.reload(); };
+  const abrir = (s) => { tela.hidden = true; app.hidden = false; dash.iniciar(s); };
+  document.getElementById('sair').addEventListener('click', () => window.sairBI());
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const s = campo.value.trim();
+    if (!s) return;
+    botao.disabled = true; erro.textContent = '';
+    try {
+      const st = await dash.testar(s);
+      if (st === 200) { gravar(s); abrir(s); }
+      else erro.textContent = st === 401 ? 'Senha incorreta.' : 'Não foi possível conectar (' + st + ').';
+    } catch (e) { erro.textContent = 'Sem conexão. Tente de novo.'; }
+    botao.disabled = false;
+  });
+  const salva = ler();
+  if (salva) abrir(salva); else { tela.hidden = false; campo.focus(); }
+})();
+</script>
+</body>
+</html>
