@@ -407,7 +407,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
   <!-- ================= DEVOLUÇÕES ================= -->
   <div class="bi-pane" id="devolucoes" data-pane="devolucoes" hidden>
-    <p class="bi-note">Reclamações e devoluções do Mercado Livre (contas Calu, Romana e Alfredo), lidas direto da API do Mercado Livre pela data de abertura da reclamação. O filtro de canal não se aplica a esta aba.</p>
+    <p class="bi-note">Reclamações e devoluções lidas direto das plataformas, pela data de abertura. Canais nesta visão: <b id="dev-canais">—</b>. Use o filtro de canal para ver um só. Shopee e Shein ainda não estão conectadas.</p>
     <section class="bi-kpis" aria-label="Indicadores de devolução">
       <div class="bi-kpi">
         <span class="bi-kpi-lbl">Devoluções reais</span>
@@ -433,7 +433,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
     <section class="bi-card">
       <h2>Modelos com mais devoluções</h2>
-      <p class="bi-note">Taxa: peças devolvidas sobre peças vendidas no Mercado Livre no mesmo período. Motivo principal: o mais comum entre as reclamações do modelo.</p>
+      <p class="bi-note">Taxa: peças devolvidas sobre peças vendidas no mesmo canal e período. Motivo principal: o mais comum entre as reclamações do modelo.</p>
       <div class="bi-wrap bi-tall">
         <table class="bi-tbl" id="bi-tab-devmod" data-source="dev_modelos" data-row-key="modelo">
           <thead><tr>
@@ -441,7 +441,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
             <th class="t" data-field="descricao">Produto</th>
             <th data-field="devolucoes">Devoluções</th>
             <th data-field="reclamacoes">Reclamações</th>
-            <th data-field="pecas_ml">Vendidas no ML</th>
+            <th data-field="pecas_ml">Vendidas</th>
             <th data-field="taxa_devolucao">Taxa de devolução</th>
             <th class="t" data-field="motivo_principal">Motivo principal</th>
           </tr></thead>
@@ -468,7 +468,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       </section>
       <section class="bi-card">
         <h2>Por conta</h2>
-        <p class="bi-note">Pedidos: vendas da conta no Mercado Livre segundo o Bling, no mesmo período.</p>
+        <p class="bi-note">Pedidos: vendas da conta segundo o Bling, no mesmo período.</p>
         <div class="bi-wrap">
           <table class="bi-tbl" id="bi-tab-devconta" data-source="dev_contas" data-row-key="conta">
             <thead><tr>
@@ -517,7 +517,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <p class="bi-note"><b>Receita líquida</b>: valor dos produtos nos pedidos de venda do Bling, menos os descontos. Não inclui frete cobrado do cliente. Pedidos cancelados ficam de fora.</p>
     <p class="bi-note"><b>Margem sobre o custo do produto</b>: receita líquida menos o preço de custo cadastrado no Bling, dividido pela receita. Ainda não desconta comissões, frete, impostos nem anúncios. O Bling guarda só o custo atual, então o painel registra o custo de cada produto todo dia desde 09/10/2026; vendas anteriores usam o primeiro custo registrado.</p>
     <p class="bi-note"><b>Desconto</b>: desconto do pedido sobre o preço dos produtos. Em Shopee e TikTok Shop pode incluir cupom pago pela própria plataforma.</p>
-    <p class="bi-note"><b>Devolução real</b>: reclamação do Mercado Livre em que o comprador recebeu etiqueta de devolução e não a cancelou nem deixou expirar. Cancelamentos antes do envio e entregas não recebidas contam como reclamação, não como devolução.</p>
+    <p class="bi-note"><b>Devolução real</b>: o produto foi (ou está sendo) mandado de volta — no Mercado Livre, o comprador recebeu etiqueta e não cancelou nem deixou expirar; no TikTok Shop, pedido de devolução com reembolso que não foi cancelado nem recusado. Cancelamentos, reembolsos sem devolução e entregas não recebidas contam como reclamação, não como devolução.</p>
     <p class="bi-note"><b>Modelo</b>: a parte do SKU antes do primeiro hífen (2470-3 é o modelo 2470). Kits usam o próprio saldo calculado pelo Bling.</p>
   </section>
 </div>
@@ -791,7 +791,7 @@ window.dash = (() => {
     tabs.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === nome)));
     document.querySelectorAll('[data-pane]').forEach((p) => { p.hidden = p.dataset.pane !== nome; });
     document.getElementById('filtros').querySelectorAll('.bi-seg, .bi-lbl, #bi-reset').forEach((e) => { e.hidden = nome === 'estoque'; });
-    document.getElementById('bi-canal-lbl').hidden = nome === 'estoque' || nome === 'devolucoes';
+    document.getElementById('bi-canal-lbl').hidden = nome === 'estoque';
     if (link) dash.setLink(nome);
     if (nome === 'vendas') drawChart();
   };
@@ -963,7 +963,8 @@ window.dash = (() => {
     });
     const dr = ok('dev_resumo') ? dash.data('dev_resumo').data[0] : null;
     document.getElementById('dev-taxa').textContent = dr && dr.taxa_devolucao != null
-      ? pct.format(dr.taxa_devolucao) + ' dos ' + int.format(dr.pedidos_ml) + ' pedidos no ML' : '';
+      ? pct.format(dr.taxa_devolucao) + ' dos ' + int.format(dr.pedidos_ml) + ' pedidos' : '';
+    document.getElementById('dev-canais').textContent = dr ? dr.canais : '—';
     document.getElementById('dev-taxa-recl').textContent = dr && dr.taxa_reclamacao != null
       ? pct.format(dr.taxa_reclamacao) + ' dos pedidos' : '';
     fillTable('bi-tab-devmod', 'dev_modelos', [
