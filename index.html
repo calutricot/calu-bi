@@ -408,7 +408,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
   <!-- ================= LUCRO ================= -->
   <div class="bi-pane" id="lucro" data-pane="lucro" hidden>
-    <p class="bi-note">Lucro de cada venda com os custos reais cobrados pela plataforma: comissão e frete de cada pedido conferidos na fatura do ML, gasto de Ads por anúncio e as demais tarifas da fatura. Por enquanto só <b>Mercado Livre</b> (Calu, Romana e Alfredo); os outros canais entram em seguida. <span id="luc-aviso"></span></p>
+    <p class="bi-note">Lucro de cada venda com os custos reais cobrados pela plataforma: comissão e frete de cada pedido, gasto de Ads por anúncio e as tarifas avulsas da fatura do ML (Full, devolução, DIFAL, manutenção). Por enquanto só <b>Mercado Livre</b> (Calu, Romana e Alfredo); os outros canais entram em seguida. <span id="luc-aviso"></span></p>
     <section class="bi-kpis" aria-label="Indicadores de lucro">
       <div class="bi-kpi"><span class="bi-kpi-lbl">Receita (produtos)</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="receita" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_resumo" data-field="pedidos" data-row="0">—</span> pedidos</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Comissão</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="comissao" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_comissao" data-row="0">—</span></div>
@@ -436,7 +436,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
     <section class="bi-card">
       <h2>Outras tarifas da fatura</h2>
-      <p class="bi-note">Cobranças da fatura do Mercado Livre que não são comissão nem frete de uma venda: armazenagem Full, tarifas de devolução, manutenção da página, DIFAL e tarifas de pedidos cancelados. Valores negativos são estornos.</p>
+      <p class="bi-note">Cobranças da fatura do Mercado Livre que não são comissão, frete nem Ads de uma venda: armazenagem e retirada Full, tarifas de devolução, manutenção da página e DIFAL. Valores negativos são estornos. A comissão e o frete das vendas foram conferidos com a fatura e batem com o valor de cada pedido.</p>
       <div class="bi-wrap">
         <table class="bi-tbl" id="bi-tab-lucoutras" data-source="luc_outras" data-row-key="descricao">
           <thead><tr>
@@ -1023,7 +1023,7 @@ window.dash = (() => {
     });
     const lr = ok('luc_resumo') ? dash.data('luc_resumo').data[0] : null;
     const aviso = [];
-    if (lr && lr.pct_fatura != null && lr.pct_fatura < 0.9) aviso.push('Fatura do ML ainda carregando: ' + pct.format(lr.pct_fatura) + ' da receita já conferida na fatura; o resto usa o valor informado no pedido.');
+    if (lr && lr.fatura_ate) aviso.push('Fatura do ML ainda carregando: tarifas avulsas lidas até ' + lr.fatura_ate + '.');
     if (lr && lr.pct_sem_frete > 0.02) aviso.push('Frete ainda carregando: ' + pct.format(lr.pct_sem_frete) + ' dos itens sem frete conferido.');
     if (lr && lr.pct_sem_custo > 0.02) aviso.push(pct.format(lr.pct_sem_custo) + ' da receita sem custo cadastrado no Bling (fica fora do custo).');
     if (dash.params().canal && dash.params().canal !== 'Mercado Livre') aviso.push('O canal escolhido ainda não tem custos reais.');
