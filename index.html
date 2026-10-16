@@ -421,7 +421,22 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     </section>
 
     <section class="bi-card">
-      <h2>Por conta</h2>
+      <h2>Por canal</h2>
+      <p class="bi-note">Todos os canais com envio. Embalagem de R$ 0,50 por pedido em todos. No Mercado Livre as taxas são as reais (comissão, frete, Ads e tarifas da fatura); na Shein e Magalu vêm do que o Bling registra; em TikTok Shop, Shopee e Amazon as taxas da plataforma ainda não estão conectadas, então o lucro desses canais aparece maior do que é.</p>
+      <div class="bi-wrap">
+        <table class="bi-tbl" id="bi-tab-luccanal" data-source="luc_canais" data-row-key="canal">
+          <thead><tr>
+            <th class="t" data-field="canal">Canal</th><th data-field="pedidos">Pedidos</th><th data-field="receita">Receita</th>
+            <th data-field="taxas">Taxas da plataforma</th><th class="t" data-field="fonte">Fonte das taxas</th><th data-field="embalagem">Embalagem</th>
+            <th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="bi-card">
+      <h2>Mercado Livre por conta</h2>
       <p class="bi-note">Lucro = receita − comissão − frete − Ads − outras tarifas da fatura − embalagem (R$ 0,50 por pacote) − custo do produto. Ainda não desconta impostos.</p>
       <div class="bi-wrap">
         <table class="bi-tbl" id="bi-tab-lucconta" data-source="luc_contas" data-row-key="conta">
@@ -586,7 +601,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 // Substitui o runtime do painel: busca os dados na função painel-dados com a senha.
 window.dash = (() => {
   const URL_DADOS = 'https://dbzgkhetrxjunzypowjy.supabase.co/functions/v1/painel-dados';
-  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao', 'luc_resumo', 'luc_contas', 'luc_modelos', 'luc_outras'];
+  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao', 'luc_resumo', 'luc_contas', 'luc_modelos', 'luc_outras', 'luc_canais'];
   const SEM_FILTRO = ['estoque_resumo', 'estoque_modelos', 'carga'];
   const PADRAO = { inicio: null, fim: null, canal: null };
   const store = {}; [...COM_FILTRO, ...SEM_FILTRO].forEach((k) => { store[k] = { status: 'loading', data: [] }; });
@@ -1034,6 +1049,11 @@ window.dash = (() => {
       { f: 'pct_frete', fmt: (v) => pct.format(v) }, { f: 'pct_ads', fmt: (v) => pct.format(v) }, { f: 'pct_outras', fmt: (v) => pct.format(v) }, { f: 'pct_embalagem', fmt: (v) => pct.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
       { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
     ], { key: 'conta', filter: (r) => r.conta !== 'Total' });
+    fillTable('bi-tab-luccanal', 'luc_canais', [
+      { f: 'canal', t: true }, { f: 'pedidos', fmt: (v) => int.format(v) }, { f: 'receita', fmt: (v) => brl.format(v) },
+      { f: 'taxas', fmt: (v) => brl.format(v) }, { f: 'fonte', t: true }, { f: 'embalagem', fmt: (v) => brl.format(v) },
+      { f: 'custo', fmt: (v) => brl.format(v) }, { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
+    ], { key: 'canal' });
     fillTable('bi-tab-lucoutras', 'luc_outras', [
       { f: 'descricao', t: true }, { f: 'lancamentos', fmt: (v) => int.format(v) }, { f: 'valor', fmt: (v) => brl.format(v) },
     ], { key: 'descricao' });
