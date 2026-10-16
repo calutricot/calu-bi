@@ -156,6 +156,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <button type="button" role="tab" id="tab-vendas" data-tab="vendas" aria-selected="true">Vendas</button>
     <button type="button" role="tab" id="tab-produtos" data-tab="produtos" aria-selected="false">Produtos</button>
     <button type="button" role="tab" id="tab-estoque" data-tab="estoque" aria-selected="false">Estoque</button>
+    <button type="button" role="tab" id="tab-lucro" data-tab="lucro" aria-selected="false">Lucro</button>
     <button type="button" role="tab" id="tab-devolucoes" data-tab="devolucoes" aria-selected="false">Devoluções</button>
   </nav>
 
@@ -405,6 +406,49 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     </section>
   </div>
 
+  <!-- ================= LUCRO ================= -->
+  <div class="bi-pane" id="lucro" data-pane="lucro" hidden>
+    <p class="bi-note">Lucro de cada venda com os custos reais cobrados pela plataforma: comissão e frete de cada pedido e gasto de Ads por anúncio, lidos direto da API. Por enquanto só <b>Mercado Livre</b> (Calu, Romana e Alfredo); os outros canais entram em seguida. <span id="luc-aviso"></span></p>
+    <section class="bi-kpis" aria-label="Indicadores de lucro">
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Receita (produtos)</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="receita" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_resumo" data-field="pedidos" data-row="0">—</span> pedidos</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Comissão</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="comissao" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_comissao" data-row="0">—</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Frete pago pela loja</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="frete" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_frete" data-row="0">—</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Mercado Ads</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="ads" data-row="0">—</span><span class="bi-kpi-delta bi-flat">ACOS <span data-source="luc_resumo" data-field="acos" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Custo do produto</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="custo" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_custo" data-row="0">—</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Lucro</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="lucro" data-row="0">—</span><span class="bi-kpi-delta bi-flat">margem <span data-source="luc_resumo" data-field="margem" data-row="0">—</span></span></div>
+    </section>
+
+    <section class="bi-card">
+      <h2>Por conta</h2>
+      <p class="bi-note">Lucro = receita − comissão − frete − Ads − custo do produto. Ainda não desconta impostos, embalagem nem tarifas avulsas da fatura do ML.</p>
+      <div class="bi-wrap">
+        <table class="bi-tbl" id="bi-tab-lucconta" data-source="luc_contas" data-row-key="conta">
+          <thead><tr>
+            <th class="t" data-field="conta">Conta</th><th data-field="receita">Receita</th><th data-field="pct_comissao">Comissão</th>
+            <th data-field="pct_frete">Frete</th><th data-field="pct_ads">Ads</th><th data-field="pct_custo">Custo</th>
+            <th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="bi-card">
+      <h2>Lucro por modelo</h2>
+      <p class="bi-note">Os 40 modelos com mais receita no Mercado Livre. Ads de cada anúncio vão para o modelo mais vendido nele. Margem em vermelho: abaixo de zero.</p>
+      <div class="bi-wrap bi-tall">
+        <table class="bi-tbl" id="bi-tab-lucmod" data-source="luc_modelos" data-row-key="modelo">
+          <thead><tr>
+            <th class="t" data-field="modelo">Modelo</th><th class="t" data-field="descricao">Produto</th><th data-field="pecas">Peças</th>
+            <th data-field="receita">Receita</th><th data-field="comissao">Comissão</th><th data-field="frete">Frete</th>
+            <th data-field="ads">Ads</th><th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th><th data-field="acos">ACOS</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
   <!-- ================= DEVOLUÇÕES ================= -->
   <div class="bi-pane" id="devolucoes" data-pane="devolucoes" hidden>
     <p class="bi-note">Reclamações e devoluções lidas direto das plataformas, pela data de abertura. Canais nesta visão: <b id="dev-canais">—</b>. Use o filtro de canal para ver um só. Shopee e Shein ainda não estão conectadas.</p>
@@ -527,7 +571,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 // Substitui o runtime do painel: busca os dados na função painel-dados com a senha.
 window.dash = (() => {
   const URL_DADOS = 'https://dbzgkhetrxjunzypowjy.supabase.co/functions/v1/painel-dados';
-  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao'];
+  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao', 'luc_resumo', 'luc_contas', 'luc_modelos'];
   const SEM_FILTRO = ['estoque_resumo', 'estoque_modelos', 'carga'];
   const PADRAO = { inicio: null, fim: null, canal: null };
   const store = {}; [...COM_FILTRO, ...SEM_FILTRO].forEach((k) => { store[k] = { status: 'loading', data: [] }; });
@@ -956,6 +1000,29 @@ window.dash = (() => {
       modelos_criticos: (v) => int.format(v), valor_parado: (v) => big(v),
     });
     drawEstoque();
+    // ---------- lucro ----------
+    fillMarks('luc_resumo', {
+      receita: (v) => big(v), comissao: (v) => big(v), frete: (v) => big(v), ads: (v) => big(v), custo: (v) => big(v),
+      lucro: (v) => big(v), margem: (v) => pct.format(v), pedidos: (v) => int.format(v), acos: (v) => pct.format(v),
+      pct_comissao: (v) => pct.format(v) + ' da receita', pct_frete: (v) => pct.format(v) + ' da receita', pct_custo: (v) => pct.format(v) + ' da receita',
+    });
+    const lr = ok('luc_resumo') ? dash.data('luc_resumo').data[0] : null;
+    const aviso = [];
+    if (lr && lr.pct_sem_frete > 0.02) aviso.push('Frete ainda carregando: ' + pct.format(lr.pct_sem_frete) + ' dos itens sem frete conferido.');
+    if (lr && lr.pct_sem_custo > 0.02) aviso.push(pct.format(lr.pct_sem_custo) + ' da receita sem custo cadastrado no Bling (fica fora do custo).');
+    if (dash.params().canal && dash.params().canal !== 'Mercado Livre') aviso.push('O canal escolhido ainda não tem custos reais.');
+    document.getElementById('luc-aviso').textContent = aviso.join(' ');
+    fillTable('bi-tab-lucconta', 'luc_contas', [
+      { f: 'conta', t: true }, { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'pct_comissao', fmt: (v) => pct.format(v) },
+      { f: 'pct_frete', fmt: (v) => pct.format(v) }, { f: 'pct_ads', fmt: (v) => pct.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
+      { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
+    ], { key: 'conta', filter: (r) => r.conta !== 'Total' });
+    fillTable('bi-tab-lucmod', 'luc_modelos', [
+      { f: 'modelo', t: true }, { f: 'descricao', w: true }, { f: 'pecas', fmt: (v) => int.format(v) },
+      { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'comissao', fmt: (v) => brl.format(v) }, { f: 'frete', fmt: (v) => brl.format(v) },
+      { f: 'ads', fmt: (v) => brl.format(v) }, { f: 'custo', fmt: (v) => brl.format(v) },
+      { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true }, { f: 'acos', fmt: (v) => pct.format(v) },
+    ], { key: 'modelo', bar: 'receita' });
     // ---------- devoluções ----------
     fillMarks('dev_resumo', {
       devolucoes: (v) => int.format(v), reclamacoes: (v) => int.format(v),
