@@ -413,7 +413,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <div class="bi-kpi"><span class="bi-kpi-lbl">Receita (produtos)</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="receita" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_resumo" data-field="pedidos" data-row="0">—</span> pedidos</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Comissão</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="comissao" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_comissao" data-row="0">—</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Frete pago pela loja</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="frete" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_frete" data-row="0">—</span></div>
-      <div class="bi-kpi"><span class="bi-kpi-lbl">Mercado Ads</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="ads" data-row="0">—</span><span class="bi-kpi-delta bi-flat">ACOS <span data-source="luc_resumo" data-field="acos" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Mercado Ads</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="ads" data-row="0">—</span><span class="bi-kpi-delta bi-flat">ACOS <span data-source="luc_resumo" data-field="acos" data-row="0">—</span> · TACoS <span data-source="luc_resumo" data-field="tacos" data-row="0">—</span></span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Outras tarifas ML</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="outras" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_outras" data-row="0">—</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Embalagem</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="embalagem" data-row="0">—</span><span class="bi-kpi-delta bi-flat">R$ 0,50 por pacote</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Custo do produto</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="custo" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_custo" data-row="0">—</span></div>
@@ -442,7 +442,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         <table class="bi-tbl" id="bi-tab-lucconta" data-source="luc_contas" data-row-key="conta">
           <thead><tr>
             <th class="t" data-field="conta">Conta</th><th data-field="receita">Receita</th><th data-field="pct_comissao">Comissão</th>
-            <th data-field="pct_frete">Frete</th><th data-field="pct_ads">Ads</th><th data-field="pct_outras">Outras</th><th data-field="pct_embalagem">Embal.</th><th data-field="pct_custo">Custo</th>
+            <th data-field="pct_frete">Frete</th><th data-field="pct_ads">Ads (TACoS)</th><th data-field="acos">ACOS</th><th data-field="pct_outras">Outras</th><th data-field="pct_embalagem">Embal.</th><th data-field="pct_custo">Custo</th>
             <th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
           </tr></thead>
           <tbody></tbody>
@@ -465,13 +465,13 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
     <section class="bi-card">
       <h2>Lucro por modelo</h2>
-      <p class="bi-note">Os 40 modelos com mais receita no Mercado Livre. Ads de cada anúncio vão para o modelo mais vendido nele. Margem em vermelho: abaixo de zero.</p>
+      <p class="bi-note">Os 40 modelos com mais receita no Mercado Livre. Ads de cada anúncio vão para o modelo mais vendido nele. ACOS = Ads ÷ vendas vindas do anúncio; TACoS = Ads ÷ toda a receita do modelo. Margem em vermelho: abaixo de zero.</p>
       <div class="bi-wrap bi-tall">
         <table class="bi-tbl" id="bi-tab-lucmod" data-source="luc_modelos" data-row-key="modelo">
           <thead><tr>
             <th class="t" data-field="modelo">Modelo</th><th class="t" data-field="descricao">Produto</th><th data-field="pecas">Peças</th>
             <th data-field="receita">Receita</th><th data-field="comissao">Comissão</th><th data-field="frete">Frete</th>
-            <th data-field="ads">Ads</th><th data-field="embalagem">Embal.</th><th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th><th data-field="acos">ACOS</th>
+            <th data-field="ads">Ads</th><th data-field="embalagem">Embal.</th><th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th><th data-field="acos">ACOS</th><th data-field="tacos">TACoS</th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -1034,7 +1034,7 @@ window.dash = (() => {
     fillMarks('luc_resumo', {
       receita: (v) => big(v), comissao: (v) => big(v), frete: (v) => big(v), ads: (v) => big(v), custo: (v) => big(v), outras: (v) => big(v), embalagem: (v) => big(v),
       pct_outras: (v) => pct.format(v) + ' da receita',
-      lucro: (v) => big(v), margem: (v) => pct.format(v), pedidos: (v) => int.format(v), acos: (v) => pct.format(v),
+      lucro: (v) => big(v), margem: (v) => pct.format(v), pedidos: (v) => int.format(v), acos: (v) => pct.format(v), tacos: (v) => pct.format(v),
       pct_comissao: (v) => pct.format(v) + ' da receita', pct_frete: (v) => pct.format(v) + ' da receita', pct_custo: (v) => pct.format(v) + ' da receita',
     });
     const lr = ok('luc_resumo') ? dash.data('luc_resumo').data[0] : null;
@@ -1046,7 +1046,7 @@ window.dash = (() => {
     document.getElementById('luc-aviso').textContent = aviso.join(' ');
     fillTable('bi-tab-lucconta', 'luc_contas', [
       { f: 'conta', t: true }, { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'pct_comissao', fmt: (v) => pct.format(v) },
-      { f: 'pct_frete', fmt: (v) => pct.format(v) }, { f: 'pct_ads', fmt: (v) => pct.format(v) }, { f: 'pct_outras', fmt: (v) => pct.format(v) }, { f: 'pct_embalagem', fmt: (v) => pct.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
+      { f: 'pct_frete', fmt: (v) => pct.format(v) }, { f: 'pct_ads', fmt: (v) => pct.format(v) }, { f: 'acos', fmt: (v) => pct.format(v) }, { f: 'pct_outras', fmt: (v) => pct.format(v) }, { f: 'pct_embalagem', fmt: (v) => pct.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
       { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
     ], { key: 'conta', filter: (r) => r.conta !== 'Total' });
     fillTable('bi-tab-luccanal', 'luc_canais', [
@@ -1061,7 +1061,7 @@ window.dash = (() => {
       { f: 'modelo', t: true }, { f: 'descricao', w: true }, { f: 'pecas', fmt: (v) => int.format(v) },
       { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'comissao', fmt: (v) => brl.format(v) }, { f: 'frete', fmt: (v) => brl.format(v) },
       { f: 'ads', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'custo', fmt: (v) => brl.format(v) },
-      { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true }, { f: 'acos', fmt: (v) => pct.format(v) },
+      { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true }, { f: 'acos', fmt: (v) => pct.format(v) }, { f: 'tacos', fmt: (v) => pct.format(v) },
     ], { key: 'modelo', bar: 'receita' });
     // ---------- devoluções ----------
     fillMarks('dev_resumo', {
