@@ -416,19 +416,20 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       <div class="bi-kpi"><span class="bi-kpi-lbl">Mercado Ads</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="ads" data-row="0">—</span><span class="bi-kpi-delta bi-flat">ACOS <span data-source="luc_resumo" data-field="acos" data-row="0">—</span> · TACoS <span data-source="luc_resumo" data-field="tacos" data-row="0">—</span></span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Outras tarifas ML</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="outras" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_outras" data-row="0">—</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Embalagem</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="embalagem" data-row="0">—</span><span class="bi-kpi-delta bi-flat">R$ 0,50 por pacote</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Imposto</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="imposto" data-row="0">—</span><span class="bi-kpi-delta bi-flat">10% da receita</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Custo do produto</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="custo" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_custo" data-row="0">—</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Lucro</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="lucro" data-row="0">—</span><span class="bi-kpi-delta bi-flat">margem <span data-source="luc_resumo" data-field="margem" data-row="0">—</span></span></div>
     </section>
 
     <section class="bi-card">
       <h2>Por canal</h2>
-      <p class="bi-note">Todos os canais com envio. Embalagem de R$ 0,50 por pedido em todos. No Mercado Livre as taxas são as reais (comissão, frete, Ads e tarifas da fatura); no TikTok Shop vêm dos extratos financeiros do TikTok (sem os anúncios GMV Max); na Shein e Magalu vêm do que o Bling registra; em Shopee e Amazon as taxas da plataforma ainda não estão conectadas, então o lucro desses canais aparece maior do que é.</p>
+      <p class="bi-note">Todos os canais com envio. Embalagem de R$ 0,50 por pedido e imposto de 10% da receita em todos. No Mercado Livre as taxas são as reais (comissão, frete, Ads e tarifas da fatura); no TikTok Shop vêm dos extratos financeiros do TikTok (sem os anúncios GMV Max); na Shein e Magalu vêm do que o Bling registra; em Shopee e Amazon as taxas da plataforma ainda não estão conectadas, então o lucro desses canais aparece maior do que é.</p>
       <div class="bi-wrap">
         <table class="bi-tbl" id="bi-tab-luccanal" data-source="luc_canais" data-row-key="canal">
           <thead><tr>
             <th class="t" data-field="canal">Canal</th><th data-field="pedidos">Pedidos</th><th data-field="receita">Receita</th>
             <th data-field="taxas">Taxas da plataforma</th><th class="t" data-field="fonte">Fonte das taxas</th><th data-field="embalagem">Embalagem</th>
-            <th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
+            <th data-field="imposto">Imposto</th><th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -443,7 +444,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
           <thead><tr>
             <th data-field="pedidos">Pedidos</th><th data-field="receita">Receita</th><th data-field="pct_comissao">Comissão</th>
             <th data-field="pct_afiliado">Afiliados</th><th data-field="pct_tarifas">Tarifas</th><th data-field="pct_frete">Frete</th>
-            <th data-field="ajustes">Ajustes</th><th data-field="embalagem">Embalagem</th><th data-field="pct_custo">Custo</th>
+            <th data-field="ajustes">Ajustes</th><th data-field="embalagem">Embalagem</th><th data-field="imposto">Imposto</th><th data-field="pct_custo">Custo</th>
             <th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
           </tr></thead>
           <tbody></tbody>
@@ -453,12 +454,12 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
     <section class="bi-card">
       <h2>Mercado Livre por conta</h2>
-      <p class="bi-note">Lucro = receita − comissão − frete − Ads − outras tarifas da fatura − embalagem (R$ 0,50 por pacote) − custo do produto. Ainda não desconta impostos.</p>
+      <p class="bi-note">Lucro = receita − comissão − frete − Ads − outras tarifas da fatura − embalagem (R$ 0,50 por pacote) − imposto (10% da receita) − custo do produto.</p>
       <div class="bi-wrap">
         <table class="bi-tbl" id="bi-tab-lucconta" data-source="luc_contas" data-row-key="conta">
           <thead><tr>
             <th class="t" data-field="conta">Conta</th><th data-field="receita">Receita</th><th data-field="pct_comissao">Comissão</th>
-            <th data-field="pct_frete">Frete</th><th data-field="pct_ads">Ads (TACoS)</th><th data-field="acos">ACOS</th><th data-field="pct_outras">Outras</th><th data-field="pct_embalagem">Embal.</th><th data-field="pct_custo">Custo</th>
+            <th data-field="pct_frete">Frete</th><th data-field="pct_ads">Ads (TACoS)</th><th data-field="acos">ACOS</th><th data-field="pct_outras">Outras</th><th data-field="pct_embalagem">Embal.</th><th data-field="pct_imposto">Imposto</th><th data-field="pct_custo">Custo</th>
             <th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
           </tr></thead>
           <tbody></tbody>
@@ -487,7 +488,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
           <thead><tr>
             <th class="t" data-field="modelo">Modelo</th><th class="t" data-field="descricao">Produto</th><th data-field="pecas">Peças</th>
             <th data-field="receita">Receita</th><th data-field="comissao">Comissão</th><th data-field="frete">Frete</th>
-            <th data-field="ads">Ads</th><th data-field="embalagem">Embal.</th><th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th><th data-field="acos">ACOS</th><th data-field="tacos">TACoS</th>
+            <th data-field="ads">Ads</th><th data-field="embalagem">Embal.</th><th data-field="imposto">Imposto</th><th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th><th data-field="acos">ACOS</th><th data-field="tacos">TACoS</th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -1048,7 +1049,7 @@ window.dash = (() => {
     drawEstoque();
     // ---------- lucro ----------
     fillMarks('luc_resumo', {
-      receita: (v) => big(v), comissao: (v) => big(v), frete: (v) => big(v), ads: (v) => big(v), custo: (v) => big(v), outras: (v) => big(v), embalagem: (v) => big(v),
+      receita: (v) => big(v), comissao: (v) => big(v), frete: (v) => big(v), ads: (v) => big(v), custo: (v) => big(v), outras: (v) => big(v), embalagem: (v) => big(v), imposto: (v) => big(v),
       pct_outras: (v) => pct.format(v) + ' da receita',
       lucro: (v) => big(v), margem: (v) => pct.format(v), pedidos: (v) => int.format(v), acos: (v) => pct.format(v), tacos: (v) => pct.format(v),
       pct_comissao: (v) => pct.format(v) + ' da receita', pct_frete: (v) => pct.format(v) + ' da receita', pct_custo: (v) => pct.format(v) + ' da receita',
@@ -1062,18 +1063,18 @@ window.dash = (() => {
     document.getElementById('luc-aviso').textContent = aviso.join(' ');
     fillTable('bi-tab-lucconta', 'luc_contas', [
       { f: 'conta', t: true }, { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'pct_comissao', fmt: (v) => pct.format(v) },
-      { f: 'pct_frete', fmt: (v) => pct.format(v) }, { f: 'pct_ads', fmt: (v) => pct.format(v) }, { f: 'acos', fmt: (v) => pct.format(v) }, { f: 'pct_outras', fmt: (v) => pct.format(v) }, { f: 'pct_embalagem', fmt: (v) => pct.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
+      { f: 'pct_frete', fmt: (v) => pct.format(v) }, { f: 'pct_ads', fmt: (v) => pct.format(v) }, { f: 'acos', fmt: (v) => pct.format(v) }, { f: 'pct_outras', fmt: (v) => pct.format(v) }, { f: 'pct_embalagem', fmt: (v) => pct.format(v) }, { f: 'pct_imposto', fmt: (v) => pct.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
       { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
     ], { key: 'conta', filter: (r) => r.conta !== 'Total' });
     fillTable('bi-tab-luccanal', 'luc_canais', [
       { f: 'canal', t: true }, { f: 'pedidos', fmt: (v) => int.format(v) }, { f: 'receita', fmt: (v) => brl.format(v) },
-      { f: 'taxas', fmt: (v) => brl.format(v) }, { f: 'fonte', t: true }, { f: 'embalagem', fmt: (v) => brl.format(v) },
+      { f: 'taxas', fmt: (v) => brl.format(v) }, { f: 'fonte', t: true }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'imposto', fmt: (v) => brl.format(v) },
       { f: 'custo', fmt: (v) => brl.format(v) }, { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
     ], { key: 'canal' });
     fillTable('bi-tab-luctt', 'luc_tiktok', [
       { f: 'pedidos', fmt: (v) => int.format(v) }, { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'pct_comissao', fmt: (v) => pct.format(v) },
       { f: 'pct_afiliado', fmt: (v) => pct.format(v) }, { f: 'pct_tarifas', fmt: (v) => pct.format(v) }, { f: 'pct_frete', fmt: (v) => pct.format(v) },
-      { f: 'ajustes', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
+      { f: 'ajustes', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'imposto', fmt: (v) => brl.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
       { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
     ], { key: 'pedidos' });
     const tt = ok('luc_tiktok') ? dash.data('luc_tiktok').data[0] : null;
@@ -1085,7 +1086,7 @@ window.dash = (() => {
     fillTable('bi-tab-lucmod', 'luc_modelos', [
       { f: 'modelo', t: true }, { f: 'descricao', w: true }, { f: 'pecas', fmt: (v) => int.format(v) },
       { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'comissao', fmt: (v) => brl.format(v) }, { f: 'frete', fmt: (v) => brl.format(v) },
-      { f: 'ads', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'custo', fmt: (v) => brl.format(v) },
+      { f: 'ads', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'imposto', fmt: (v) => brl.format(v) }, { f: 'custo', fmt: (v) => brl.format(v) },
       { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true }, { f: 'acos', fmt: (v) => pct.format(v) }, { f: 'tacos', fmt: (v) => pct.format(v) },
     ], { key: 'modelo', bar: 'receita' });
     // ---------- devoluções ----------
