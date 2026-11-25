@@ -157,6 +157,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <button type="button" role="tab" id="tab-produtos" data-tab="produtos" aria-selected="false">Produtos</button>
     <button type="button" role="tab" id="tab-estoque" data-tab="estoque" aria-selected="false">Estoque</button>
     <button type="button" role="tab" id="tab-lucro" data-tab="lucro" aria-selected="false">Lucro</button>
+    <button type="button" role="tab" id="tab-tiktok" data-tab="tiktok" aria-selected="false">TikTok</button>
     <button type="button" role="tab" id="tab-devolucoes" data-tab="devolucoes" aria-selected="false">Devoluções</button>
   </nav>
 
@@ -408,7 +409,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
   <!-- ================= LUCRO ================= -->
   <div class="bi-pane" id="lucro" data-pane="lucro" hidden>
-    <p class="bi-note">Lucro de cada venda com os custos reais cobrados pela plataforma: comissão e frete de cada pedido, gasto de Ads por anúncio e as tarifas avulsas da fatura do ML (Full, devolução, DIFAL, manutenção). Os indicadores do topo e as tabelas por conta e por modelo são do <b>Mercado Livre</b> (Calu, Romana e Alfredo); o <b>TikTok Shop</b> tem quadro próprio abaixo, e a tabela por canal junta todos. <span id="luc-aviso"></span></p>
+    <p class="bi-note">Lucro de cada venda com os custos reais cobrados pela plataforma: comissão e frete de cada pedido, gasto de Ads por anúncio e as tarifas avulsas da fatura do ML (Full, devolução, DIFAL, manutenção). Os indicadores do topo e as tabelas por conta e por modelo são do <b>Mercado Livre</b> (Calu, Romana e Alfredo); o <b>TikTok Shop</b> tem aba própria, e a tabela por canal junta todos. <span id="luc-aviso"></span></p>
     <section class="bi-kpis" aria-label="Indicadores de lucro">
       <div class="bi-kpi"><span class="bi-kpi-lbl">Receita (produtos)</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="receita" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_resumo" data-field="pedidos" data-row="0">—</span> pedidos</span></div>
       <div class="bi-kpi"><span class="bi-kpi-lbl">Comissão</span><span class="bi-kpi-val dash-skeleton" data-source="luc_resumo" data-field="comissao" data-row="0">—</span><span class="bi-kpi-delta bi-flat" data-source="luc_resumo" data-field="pct_comissao" data-row="0">—</span></div>
@@ -430,23 +431,6 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
             <th class="t" data-field="canal">Canal</th><th data-field="pedidos">Pedidos</th><th data-field="receita">Receita</th>
             <th data-field="taxas">Taxas da plataforma</th><th class="t" data-field="fonte">Fonte das taxas</th><th data-field="embalagem">Embalagem</th>
             <th data-field="imposto">Imposto</th><th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
-          </tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="bi-card">
-      <h2>TikTok Shop</h2>
-      <p class="bi-note">Custos reais dos extratos financeiros do TikTok: comissão da plataforma, comissão de afiliados, tarifas (R$ 6 fixos por item vendido + taxa do programa de frete grátis), frete pago pela loja e o gasto com anúncios GMV Max (da conta de anúncios do TikTok; ACOS = gasto ÷ vendas vindas do anúncio, TACoS = gasto ÷ toda a receita). Reembolsos já vêm descontados da receita; pedido reembolsado por inteiro não conta custo do produto. Ajustes são reembolsos de frete e da plataforma a favor da loja. Pedidos ainda não liquidados usam a média dos últimos 60 dias. <span id="tt-liq"></span></p>
-      <div class="bi-wrap">
-        <table class="bi-tbl" id="bi-tab-luctt" data-source="luc_tiktok" data-row-key="pedidos">
-          <thead><tr>
-            <th data-field="pedidos">Pedidos</th><th data-field="receita">Receita</th><th data-field="pct_comissao">Comissão</th>
-            <th data-field="pct_afiliado">Afiliados</th><th data-field="pct_tarifas">Tarifas</th><th data-field="pct_frete">Frete</th>
-            <th data-field="ads">GMV Max</th><th data-field="acos">ACOS</th><th data-field="tacos">TACoS</th>
-            <th data-field="ajustes">Ajustes</th><th data-field="embalagem">Embalagem</th><th data-field="imposto">Imposto</th><th data-field="pct_custo">Custo</th>
-            <th data-field="lucro">Lucro</th><th data-field="margem">Margem</th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -490,6 +474,40 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
             <th class="t" data-field="modelo">Modelo</th><th class="t" data-field="descricao">Produto</th><th data-field="pecas">Peças</th>
             <th data-field="receita">Receita</th><th data-field="comissao">Comissão</th><th data-field="frete">Frete</th>
             <th data-field="ads">Ads</th><th data-field="embalagem">Embal.</th><th data-field="imposto">Imposto</th><th data-field="custo">Custo</th><th data-field="lucro">Lucro</th><th data-field="margem">Margem</th><th data-field="acos">ACOS</th><th data-field="tacos">TACoS</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= TIKTOK ================= -->
+  <div class="bi-pane" id="tiktok" data-pane="tiktok" hidden>
+    <p class="bi-note">Lucro do <b>TikTok Shop</b> com os custos reais: comissão, afiliados e tarifas vêm dos extratos financeiros do TikTok (tarifa fixa de R$ 6 por item + taxa do programa de frete grátis), o gasto com anúncios vem da conta GMV Max, mais embalagem (R$ 0,50 por pedido), imposto (10% da receita) e custo do produto no Bling. Reembolsos já vêm descontados da receita; pedido reembolsado por inteiro não conta custo do produto. <span id="tt-liq"></span> <span id="tt-aviso"></span></p>
+    <section class="bi-kpis" aria-label="Indicadores do TikTok">
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Receita (produtos)</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="receita" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_tiktok" data-field="pedidos" data-row="0">—</span> pedidos</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Comissão TikTok</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="comissao" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_tiktok" data-field="pct_comissao" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Afiliados</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="afiliado" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_tiktok" data-field="pct_afiliado" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Tarifas</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="tarifas" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_tiktok" data-field="pct_tarifas" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Frete pago pela loja</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="frete" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_tiktok" data-field="pct_frete" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">GMV Max</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="ads" data-row="0">—</span><span class="bi-kpi-delta bi-flat">ACOS <span data-source="luc_tiktok" data-field="acos" data-row="0">—</span> · TACoS <span data-source="luc_tiktok" data-field="tacos" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Ajustes a favor</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="ajustes" data-row="0">—</span><span class="bi-kpi-delta bi-flat">reembolsos de frete e da plataforma</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Embalagem</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="embalagem" data-row="0">—</span><span class="bi-kpi-delta bi-flat">R$ 0,50 por pedido</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Imposto</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="imposto" data-row="0">—</span><span class="bi-kpi-delta bi-flat">10% da receita</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Custo do produto</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="custo" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_tiktok" data-field="pct_custo" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Lucro</span><span class="bi-kpi-val dash-skeleton" data-source="luc_tiktok" data-field="lucro" data-row="0">—</span><span class="bi-kpi-delta bi-flat">margem <span data-source="luc_tiktok" data-field="margem" data-row="0">—</span></span></div>
+    </section>
+
+    <section class="bi-card">
+      <h2>Lucro por modelo</h2>
+      <p class="bi-note">Os 60 modelos com mais receita no TikTok Shop. Os custos de cada pedido são divididos entre os itens pela receita de cada um; o GMV Max é cobrado por loja e vai para os modelos na proporção da receita (o TikTok não informa o gasto por produto). Os ajustes a favor da loja não entram por modelo. Taxas = comissão + afiliados + tarifas. Margem em vermelho: abaixo de zero.</p>
+      <div class="bi-wrap bi-tall">
+        <table class="bi-tbl" id="bi-tab-ttmod" data-source="luc_tt_modelos" data-row-key="modelo">
+          <thead><tr>
+            <th class="t" data-field="modelo">Modelo</th><th class="t" data-field="descricao">Produto</th><th data-field="pecas">Peças</th>
+            <th data-field="receita">Receita</th><th data-field="pct_taxas">Taxas</th><th data-field="frete">Frete</th>
+            <th data-field="ads">GMV Max</th><th data-field="embalagem">Embal.</th><th data-field="imposto">Imposto</th><th data-field="custo">Custo</th>
+            <th data-field="lucro">Lucro</th><th data-field="margem">Margem</th><th data-field="devolvidos">Reemb.</th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -613,13 +631,13 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <p class="bi-note"><b>Modelo</b>: a parte do SKU antes do primeiro hífen (2470-3 é o modelo 2470). Kits usam o próprio saldo calculado pelo Bling.</p>
   </section>
 </div>
-<footer class="rodape"><span>Dados do Bling e do Mercado Livre, atualizados a cada poucos minutos. Somente leitura.</span><button type="button" id="sair">Sair</button></footer>
+<footer class="rodape"><span>Dados do Bling, do Mercado Livre e do TikTok Shop, atualizados a cada poucos minutos. Somente leitura.</span><button type="button" id="sair">Sair</button></footer>
 </main>
 <script>
 // Substitui o runtime do painel: busca os dados na função painel-dados com a senha.
 window.dash = (() => {
   const URL_DADOS = 'https://dbzgkhetrxjunzypowjy.supabase.co/functions/v1/painel-dados';
-  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao', 'luc_resumo', 'luc_contas', 'luc_modelos', 'luc_outras', 'luc_canais', 'luc_tiktok'];
+  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao', 'luc_resumo', 'luc_contas', 'luc_modelos', 'luc_outras', 'luc_canais', 'luc_tiktok', 'luc_tt_modelos'];
   const SEM_FILTRO = ['estoque_resumo', 'estoque_modelos', 'carga'];
   const PADRAO = { inicio: null, fim: null, canal: null };
   const store = {}; [...COM_FILTRO, ...SEM_FILTRO].forEach((k) => { store[k] = { status: 'loading', data: [] }; });
@@ -1060,7 +1078,7 @@ window.dash = (() => {
     if (lr && lr.fatura_ate) aviso.push('Fatura do ML ainda carregando: tarifas avulsas lidas até ' + lr.fatura_ate + '.');
     if (lr && lr.pct_sem_frete > 0.02) aviso.push('Frete ainda carregando: ' + pct.format(lr.pct_sem_frete) + ' dos itens sem frete conferido.');
     if (lr && lr.pct_sem_custo > 0.02) aviso.push(pct.format(lr.pct_sem_custo) + ' da receita sem custo cadastrado no Bling (fica fora do custo).');
-    if (dash.params().canal === 'TikTok Shop') aviso.push('Com o filtro TikTok Shop, os indicadores do topo (que são do Mercado Livre) ficam vazios: veja o quadro TikTok Shop abaixo.');
+    if (dash.params().canal === 'TikTok Shop') aviso.push('Com o filtro TikTok Shop, os indicadores do topo (que são do Mercado Livre) ficam vazios: veja a aba TikTok.');
     else if (dash.params().canal && dash.params().canal !== 'Mercado Livre') aviso.push('O canal escolhido ainda não tem custos reais da plataforma.');
     document.getElementById('luc-aviso').textContent = aviso.join(' ');
     fillTable('bi-tab-lucconta', 'luc_contas', [
@@ -1073,16 +1091,24 @@ window.dash = (() => {
       { f: 'taxas', fmt: (v) => brl.format(v) }, { f: 'fonte', t: true }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'imposto', fmt: (v) => brl.format(v) },
       { f: 'custo', fmt: (v) => brl.format(v) }, { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
     ], { key: 'canal' });
-    fillTable('bi-tab-luctt', 'luc_tiktok', [
-      { f: 'pedidos', fmt: (v) => int.format(v) }, { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'pct_comissao', fmt: (v) => pct.format(v) },
-      { f: 'pct_afiliado', fmt: (v) => pct.format(v) }, { f: 'pct_tarifas', fmt: (v) => pct.format(v) }, { f: 'pct_frete', fmt: (v) => pct.format(v) },
-      { f: 'ads', fmt: (v) => brl.format(v) }, { f: 'acos', fmt: (v) => pct.format(v) }, { f: 'tacos', fmt: (v) => pct.format(v) },
-      { f: 'ajustes', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'imposto', fmt: (v) => brl.format(v) }, { f: 'pct_custo', fmt: (v) => pct.format(v) },
-      { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true },
-    ], { key: 'pedidos' });
+    // ---------- tiktok ----------
+    fillMarks('luc_tiktok', {
+      receita: (v) => big(v), comissao: (v) => big(v), afiliado: (v) => big(v), tarifas: (v) => big(v), frete: (v) => big(v),
+      ads: (v) => big(v), ajustes: (v) => big(v), embalagem: (v) => big(v), imposto: (v) => big(v), custo: (v) => big(v),
+      lucro: (v) => big(v), margem: (v) => pct.format(v), pedidos: (v) => int.format(v), acos: (v) => pct.format(v), tacos: (v) => pct.format(v),
+      pct_comissao: (v) => pct.format(v) + ' da receita', pct_afiliado: (v) => pct.format(v) + ' da receita', pct_tarifas: (v) => pct.format(v) + ' da receita',
+      pct_frete: (v) => pct.format(v) + ' da receita', pct_custo: (v) => pct.format(v) + ' da receita',
+    });
     const tt = ok('luc_tiktok') ? dash.data('luc_tiktok').data[0] : null;
     document.getElementById('tt-liq').textContent = tt && tt.liquidados < tt.pedidos
-      ? int.format(tt.liquidados) + ' de ' + int.format(tt.pedidos) + ' pedidos do período já liquidados; ' + int.format(tt.devolvidos) + ' reembolsados por inteiro.' : (tt ? int.format(tt.devolvidos) + ' pedidos reembolsados por inteiro.' : '');
+      ? int.format(tt.liquidados) + ' de ' + int.format(tt.pedidos) + ' pedidos do período já liquidados (o resto usa a média dos últimos 60 dias); ' + int.format(tt.devolvidos) + ' reembolsados por inteiro.' : (tt ? int.format(tt.devolvidos) + ' pedidos reembolsados por inteiro.' : '');
+    document.getElementById('tt-aviso').textContent = dash.params().canal && dash.params().canal !== 'TikTok Shop' ? 'O filtro de canal está em ' + dash.params().canal + ': limpe o filtro ou escolha TikTok Shop para ver esta aba.' : '';
+    fillTable('bi-tab-ttmod', 'luc_tt_modelos', [
+      { f: 'modelo', t: true }, { f: 'descricao', w: true }, { f: 'pecas', fmt: (v) => int.format(v) },
+      { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'pct_taxas', fmt: (v) => pct.format(v) }, { f: 'frete', fmt: (v) => brl.format(v) },
+      { f: 'ads', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'imposto', fmt: (v) => brl.format(v) }, { f: 'custo', fmt: (v) => brl.format(v) },
+      { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true }, { f: 'devolvidos', fmt: (v) => int.format(v) },
+    ], { key: 'modelo', bar: 'receita' });
     fillTable('bi-tab-lucoutras', 'luc_outras', [
       { f: 'descricao', t: true }, { f: 'lancamentos', fmt: (v) => int.format(v) }, { f: 'valor', fmt: (v) => brl.format(v) },
     ], { key: 'descricao' });
