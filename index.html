@@ -158,6 +158,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <button type="button" role="tab" id="tab-estoque" data-tab="estoque" aria-selected="false">Estoque</button>
     <button type="button" role="tab" id="tab-lucro" data-tab="lucro" aria-selected="false">Lucro</button>
     <button type="button" role="tab" id="tab-tiktok" data-tab="tiktok" aria-selected="false">TikTok</button>
+    <button type="button" role="tab" id="tab-shopee" data-tab="shopee" aria-selected="false">Shopee</button>
     <button type="button" role="tab" id="tab-devolucoes" data-tab="devolucoes" aria-selected="false">Devoluções</button>
   </nav>
 
@@ -517,6 +518,41 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     </section>
   </div>
 
+  <div class="bi-pane" id="shopee" data-pane="shopee" hidden>
+    <p class="bi-note">Lucro da <b>Shopee</b> nas lojas conectadas pela API (<span data-source="luc_shopee" data-field="lojas" data-row="0">—</span>), com o valor exato do repasse de cada pedido: comissão, taxa de serviço, taxa fixa por item, afiliados, cupom pago pela loja e frete. O gasto com anúncios vem do Shopee Ads da loja. Mais embalagem (R$ 0,50 por pedido), imposto (10% da receita) e custo do produto no Bling. Devoluções já vêm descontadas da receita; pedido devolvido por inteiro não conta custo do produto. As outras lojas Shopee continuam na aba Lucro com os dados do Bling até serem conectadas. <span id="sp-api"></span> <span id="sp-aviso"></span></p>
+    <section class="bi-kpis" aria-label="Indicadores da Shopee">
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Receita (produtos)</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="receita" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_shopee" data-field="pedidos" data-row="0">—</span> pedidos</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Comissão Shopee</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="comissao" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_shopee" data-field="pct_comissao" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Taxa de serviço</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="servico" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_shopee" data-field="pct_servico" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Taxa fixa por item</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="taxa_fixa" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_shopee" data-field="pct_taxa_fixa" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Afiliados</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="afiliado" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_shopee" data-field="pct_afiliado" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Cupom da loja</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="cupom" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_shopee" data-field="pct_cupom" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Frete pago pela loja</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="frete" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_shopee" data-field="pct_frete" data-row="0">—</span> (inclui frete de devolução)</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Shopee Ads</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="ads" data-row="0">—</span><span class="bi-kpi-delta bi-flat">ACOS <span data-source="luc_shopee" data-field="acos" data-row="0">—</span> · TACoS <span data-source="luc_shopee" data-field="tacos" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Ajustes</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="ajustes" data-row="0">—</span><span class="bi-kpi-delta bi-flat">reembolsos e cobranças avulsas da Shopee</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Embalagem</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="embalagem" data-row="0">—</span><span class="bi-kpi-delta bi-flat">R$ 0,50 por pedido</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Imposto</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="imposto" data-row="0">—</span><span class="bi-kpi-delta bi-flat">10% da receita</span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Custo do produto</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="custo" data-row="0">—</span><span class="bi-kpi-delta bi-flat"><span data-source="luc_shopee" data-field="pct_custo" data-row="0">—</span></span></div>
+      <div class="bi-kpi"><span class="bi-kpi-lbl">Lucro</span><span class="bi-kpi-val dash-skeleton" data-source="luc_shopee" data-field="lucro" data-row="0">—</span><span class="bi-kpi-delta bi-flat">margem <span data-source="luc_shopee" data-field="margem" data-row="0">—</span></span></div>
+    </section>
+
+    <section class="bi-card">
+      <h2>Lucro por modelo</h2>
+      <p class="bi-note">Os 60 modelos com mais receita nas lojas Shopee conectadas. Os custos de cada pedido são divididos entre os itens pela receita de cada um; a taxa fixa, pelas peças do pedido; o Shopee Ads é cobrado por loja e vai para os modelos na proporção da receita. Outras = afiliados, cupom da loja e taxa de transação. Margem em vermelho: abaixo de zero.</p>
+      <div class="bi-wrap bi-tall">
+        <table class="bi-tbl" id="bi-tab-spmod" data-source="luc_sp_modelos" data-row-key="modelo">
+          <thead><tr>
+            <th class="t" data-field="modelo">Modelo</th><th class="t" data-field="descricao">Produto</th><th data-field="pecas">Peças</th>
+            <th data-field="receita">Receita</th><th data-field="comissao">Comissão</th><th data-field="servico">Serviço</th><th data-field="taxa_fixa">Taxa fixa</th><th data-field="outras">Outras</th><th data-field="frete">Frete</th>
+            <th data-field="ads">Ads</th><th data-field="embalagem">Embal.</th><th data-field="imposto">Imposto</th><th data-field="custo">Custo</th>
+            <th data-field="lucro">Lucro</th><th data-field="margem">Margem</th><th data-field="devolvidos">Devol.</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
   <!-- ================= DEVOLUÇÕES ================= -->
   <div class="bi-pane" id="devolucoes" data-pane="devolucoes" hidden>
     <p class="bi-note">Reclamações e devoluções lidas direto das plataformas, pela data de abertura. Canais nesta visão: <b id="dev-canais">—</b>. Use o filtro de canal para ver um só. Shopee e Shein ainda não estão conectadas.</p>
@@ -633,13 +669,13 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <p class="bi-note"><b>Modelo</b>: a parte do SKU antes do primeiro hífen (2470-3 é o modelo 2470). Kits usam o próprio saldo calculado pelo Bling.</p>
   </section>
 </div>
-<footer class="rodape"><span>Dados do Bling, do Mercado Livre e do TikTok Shop, atualizados a cada poucos minutos. Somente leitura.</span><button type="button" id="sair">Sair</button></footer>
+<footer class="rodape"><span>Dados do Bling, do Mercado Livre, do TikTok Shop e da Shopee, atualizados a cada poucos minutos. Somente leitura.</span><button type="button" id="sair">Sair</button></footer>
 </main>
 <script>
 // Substitui o runtime do painel: busca os dados na função painel-dados com a senha.
 window.dash = (() => {
   const URL_DADOS = 'https://dbzgkhetrxjunzypowjy.supabase.co/functions/v1/painel-dados';
-  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao', 'luc_resumo', 'luc_contas', 'luc_modelos', 'luc_outras', 'luc_canais', 'luc_tiktok', 'luc_tt_modelos'];
+  const COM_FILTRO = ['resumo', 'diario', 'por_canal', 'por_loja', 'modelos', 'abc', 'categorias', 'cor_tamanho', 'dev_resumo', 'dev_contas', 'dev_modelos', 'dev_motivos', 'dev_situacao', 'luc_resumo', 'luc_contas', 'luc_modelos', 'luc_outras', 'luc_canais', 'luc_tiktok', 'luc_tt_modelos', 'luc_shopee', 'luc_sp_modelos'];
   const SEM_FILTRO = ['estoque_resumo', 'estoque_modelos', 'carga'];
   const PADRAO = { inicio: null, fim: null, canal: null };
   const store = {}; [...COM_FILTRO, ...SEM_FILTRO].forEach((k) => { store[k] = { status: 'loading', data: [] }; });
@@ -1111,6 +1147,25 @@ window.dash = (() => {
       { f: 'pecas_abaixo_50', fmt: (v) => int.format(v) },
       { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'comissao', fmt: (v) => brl.format(v) }, { f: 'pct_comissao', fmt: (v) => pct.format(v) },
       { f: 'afiliado', fmt: (v) => brl.format(v) }, { f: 'frete_gratis', fmt: (v) => brl.format(v) }, { f: 'taxa_fixa', fmt: (v) => brl.format(v) }, { f: 'frete', fmt: (v) => brl.format(v) },
+      { f: 'ads', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'imposto', fmt: (v) => brl.format(v) }, { f: 'custo', fmt: (v) => brl.format(v) },
+      { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true }, { f: 'devolvidos', fmt: (v) => int.format(v) },
+    ], { key: 'modelo', bar: 'receita' });
+    // ---------- shopee ----------
+    fillMarks('luc_shopee', {
+      receita: (v) => big(v), comissao: (v) => big(v), servico: (v) => big(v), taxa_fixa: (v) => big(v), afiliado: (v) => big(v), cupom: (v) => big(v),
+      frete: (v) => big(v), ads: (v) => big(v), ajustes: (v) => big(v), embalagem: (v) => big(v), imposto: (v) => big(v), custo: (v) => big(v),
+      lucro: (v) => big(v), margem: (v) => pct.format(v), pedidos: (v) => int.format(v), acos: (v) => pct.format(v), tacos: (v) => pct.format(v), lojas: (v) => v,
+      pct_comissao: (v) => pct.format(v) + ' da receita', pct_servico: (v) => pct.format(v) + ' da receita', pct_taxa_fixa: (v) => pct.format(v) + ' da receita',
+      pct_afiliado: (v) => pct.format(v) + ' da receita', pct_cupom: (v) => pct.format(v) + ' da receita', pct_frete: (v) => pct.format(v) + ' da receita', pct_custo: (v) => pct.format(v) + ' da receita',
+    });
+    const sp = ok('luc_shopee') ? dash.data('luc_shopee').data[0] : null;
+    document.getElementById('sp-api').textContent = sp
+      ? (sp.com_api < sp.pedidos ? int.format(sp.com_api) + ' de ' + int.format(sp.pedidos) + ' pedidos com repasse já lido (o resto usa a média dos últimos 60 dias); ' : '') + int.format(sp.devolvidos) + ' devolvidos por inteiro.' : '';
+    document.getElementById('sp-aviso').textContent = dash.params().canal && dash.params().canal !== 'Shopee' ? 'O filtro de canal está em ' + dash.params().canal + ': limpe o filtro ou escolha Shopee para ver esta aba.' : '';
+    fillTable('bi-tab-spmod', 'luc_sp_modelos', [
+      { f: 'modelo', t: true }, { f: 'descricao', w: true }, { f: 'pecas', fmt: (v) => int.format(v) },
+      { f: 'receita', fmt: (v) => brl.format(v) }, { f: 'comissao', fmt: (v) => brl.format(v) }, { f: 'servico', fmt: (v) => brl.format(v) },
+      { f: 'taxa_fixa', fmt: (v) => brl.format(v) }, { f: 'outras', fmt: (v) => brl.format(v) }, { f: 'frete', fmt: (v) => brl.format(v) },
       { f: 'ads', fmt: (v) => brl.format(v) }, { f: 'embalagem', fmt: (v) => brl.format(v) }, { f: 'imposto', fmt: (v) => brl.format(v) }, { f: 'custo', fmt: (v) => brl.format(v) },
       { f: 'lucro', fmt: (v) => brl.format(v), neg: true }, { f: 'margem', fmt: (v) => pct.format(v), neg: true }, { f: 'devolvidos', fmt: (v) => int.format(v) },
     ], { key: 'modelo', bar: 'receita' });
